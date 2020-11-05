@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     encryptText2 = AES256Chiper.Encrypt(text, "key");
                     Log.e("암호화메시지", encryptText2);
-                    startToast("업로드 성공");
+                    startToast("업로드 성공!");
 
 
                 } catch (Exception e) {

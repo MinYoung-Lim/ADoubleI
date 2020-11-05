@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+/*
         btn_send = findViewById(R.id.btn_send);
         btn_upload = findViewById(R.id.btn_upload);
         id_image1 = findViewById(R.id.id_image1);
@@ -130,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
                 // 키 설정
 
 
-
                 final String secretKey = "love";
                 String originalString = bitmapToString;
 
@@ -180,10 +179,12 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
     }
+    */
 
-    /*
-     * Bitmap을 String형으로 변환
-     * */
+
+
+  /*    Bitmap을 String형으로 변환
+
     public static String BitmapToString(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 15, baos);
@@ -192,9 +193,9 @@ public class MainActivity extends AppCompatActivity {
         return temp;
     }
 
-    /*
-     * Bitmap을 byte배열로 변환
-     * */
+
+      Bitmap을 byte배열로 변환
+
     public static byte[] BitmapToByteArray(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
@@ -204,14 +205,14 @@ public class MainActivity extends AppCompatActivity {
     /**
      * String 객체를 압축하여 String 으로 리턴한다. * @param string * @return
      */
-    public synchronized static String compressString(String string) {
+    /*public synchronized static String compressString(String string) {
         return byteToString(compress(string));
     }
 
     /**
      * 압축된 스트링을 복귀시켜서 String 으로 리턴한다. * @param compressed * @return
      */
-    public synchronized static String decompressString(String compressed) {
+   /* public synchronized static String decompressString(String compressed) {
         return decompress(hexToByteArray(compressed));
     }
 
@@ -261,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 16진 문자열을 byte 배열로 변환한다.
      */
-    private static byte[] hexToByteArray(String hex) {
+ /*   private static byte[] hexToByteArray(String hex) {
         if (hex == null || hex.length() % 2 != 0) {
             return new byte[]{};
         }
@@ -300,6 +301,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return resizeBitmap;
-    }
 
-}
+*/
+} }

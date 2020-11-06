@@ -47,7 +47,7 @@ public class InputName extends AppCompatActivity {
         setContentView(R.layout.activity_input_name);
         // Initialize Firebase Auth
 
-        findViewById(R.id.btn_to_password2).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_to_fingerprint).setOnClickListener(onClickListener);
     }
     public void onStart() {
         super.onStart();
@@ -71,7 +71,7 @@ public class InputName extends AppCompatActivity {
                     break;
                     */
 
-                case R.id.btn_to_password2:
+                case R.id.btn_to_fingerprint:
                     inputname();
                     //startInputPassword();
                     break;

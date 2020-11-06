@@ -20,7 +20,7 @@ public class InputFingerprint extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_input_fingerprint);
 
-        findViewById(R.id.btn_to_login).setOnClickListener(onClickListener);
+        findViewById(R.id.loginButton).setOnClickListener(onClickListener);
 
     }
     public void onStart() {
@@ -45,7 +45,7 @@ public class InputFingerprint extends AppCompatActivity {
                     break;
                     */
 
-                case R.id.btn_to_login:
+                case R.id.loginButton:
                     startLoginActivity();
                     break;
 

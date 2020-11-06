@@ -70,7 +70,7 @@
                 app:srcCompat="@drawable/name_input" />
 
             <ImageButton
-                android:id="@+id/btn_to_password2"
+                android:id="@+id/btn_to_fingerprint"
                 android:layout_width="81dp"
                 android:layout_height="87dp"
                 android:layout_gravity="right"

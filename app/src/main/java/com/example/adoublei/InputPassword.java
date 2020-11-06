@@ -26,7 +26,7 @@ public class InputPassword extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_input_password);
 
-        findViewById(R.id.btn_to_reinput_password).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_to_fingerprint).setOnClickListener(onClickListener);
     }
 
     public void onStart() {
@@ -52,7 +52,7 @@ public class InputPassword extends AppCompatActivity {
                     break;
                     */
 
-                case R.id.btn_to_reinput_password:
+                case R.id.btn_to_fingerprint:
                     inputpassword();
                    // startReInputPassword();
                     break;

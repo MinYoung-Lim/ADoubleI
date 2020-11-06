@@ -1,64 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/sign_up"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
 
-    <include
-        layout="@layout/view_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        android:gravity="fill"
         android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textViewScan"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:gravity="center"
-            android:text="Email을 입력하세요."
-            android:textColor="#000000"
-            android:textSize="24sp"
-            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/emailEditText"
+            <LinearLayout
+                android:id="@+id/secondline"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:ems="10"
-                android:hint="이메일"
-                android:inputType="textEmailAddress" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/btn_to_name"
-                android:layout_width="81dp"
-                android:layout_height="87dp"
-                android:layout_gravity="right"
-                android:background="#FFFFFF"
-                app:srcCompat="@drawable/ic_launcher_background"
-                tools:srcCompat="@drawable/ic_launcher_foreground" />
+                <TextView
+                    android:id="@+id/email_input_go"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/scdream3"
+                    android:gravity="center"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="300dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:scaleType="centerInside"
+                    android:text="Email을 입력하세요."
+                    android:textColor="#838383"
+                    android:textSize="36sp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="0dp" />
+
+                <EditText
+                    android:id="@+id/emailEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="이메일"
+                    android:inputType="textEmailAddress"
+                    tools:layout_editor_absoluteX="411dp"
+                    tools:layout_editor_absoluteY="523dp" />
+
+                <ImageView
+                    android:id="@+id/emailinputline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/Email_inputline" />
+
+                <ImageButton
+                    android:id="@+id/btn_to_name"
+                    android:layout_width="53dp"
+                    android:layout_height="87dp"
+                    android:layout_gravity="right"
+                    android:background="#FFFFFF"
+                    app:srcCompat="@drawable/ic_launcher_background"
+                    tools:layout_editor_absoluteX="377dp"
+                    tools:layout_editor_absoluteY="397dp"
+                    tools:srcCompat="@drawable/ic_launcher_foreground" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <include
-        layout="@layout/view_loader"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/email_input" />
+    </LinearLayout>
+
+</LinearLayout>

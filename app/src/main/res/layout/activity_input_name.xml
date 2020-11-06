@@ -1,65 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/input_name"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <include
-        layout="@layout/view_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/firstline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        android:gravity="fill"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textViewScan"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:gravity="center"
-            android:text="이름을 입력하세요."
-            android:textColor="#000000"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#FBFAFA"
+                app:srcCompat="@drawable/backspace"
+                android:maxHeight="50dp"
+                android:maxWidth="50dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/passwordscan"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:fontFamily="@font/scdream3"
+                android:gravity="center"
+                android:text="이름을 입력하세요."
+                android:textColor="#838383"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="162dp"
+                android:paddingLeft="0dp"
+                android:paddingTop="100dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="0dp"/>
 
             <EditText
                 android:id="@+id/nameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
                 android:ems="10"
                 android:hint="이름"
-               />
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="312dp" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/name_input" />
 
             <ImageButton
-                android:id="@+id/btn_to_password"
+                android:id="@+id/btn_to_password2"
                 android:layout_width="81dp"
                 android:layout_height="87dp"
                 android:layout_gravity="right"
                 android:background="#FFFFFF"
                 app:srcCompat="@drawable/ic_launcher_foreground"
-                />
-
+                tools:layout_editor_absoluteX="345dp"
+                tools:layout_editor_absoluteY="385dp" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <include
-        layout="@layout/view_loader"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:orientation="vertical">
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitEnd"
+            app:srcCompat="@drawable/name_background" />
+    </LinearLayout>
+
+</LinearLayout>

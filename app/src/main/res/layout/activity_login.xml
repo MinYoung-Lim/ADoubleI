@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <include
-        layout="@layout/view_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,25 +17,21 @@
             android:layout_height="200dp"
             android:gravity="center"
             android:text="로그인"
-            android:textColor="#000000"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:fontFamily="@font/scdream3"
+            android:textColor="#838383"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:paddingLeft="0dp"
+            android:paddingTop="100dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="0dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="10dp">
+            >
 
-
-            <EditText
-                android:id="@+id/emailEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:layout_marginBottom="5dp"
-                android:hint="이메일"
-                android:inputType="textEmailAddress" />
 
             <EditText
                 android:id="@+id/passwordEditText"
@@ -49,29 +40,33 @@
                 android:layout_marginBottom="5dp"
                 android:ems="10"
                 android:hint="비밀번호"
+                android:fontFamily="@font/scdream3"
                 android:inputType="textPassword" />
 
             <Button
                 android:id="@+id/loginButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="로그인" />
+                android:text="로그인"
+                android:fontFamily="@font/scdream3"/>
 
             <Button
                 android:id="@+id/btn_to_signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="scanButton"
-                android:text="회원가입" />
+                android:text="회원가입"
+                android:fontFamily="@font/scdream3"/>
+
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitEnd"
+                app:srcCompat="@drawable/login_backgroud" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <include
-        layout="@layout/view_loader"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
-
-</RelativeLayout>
+</LinearLayout>

@@ -61,7 +61,7 @@
                     android:id="@+id/emailinputline"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/Email_inputline" />
+                    app:srcCompat="@drawable/email_inputline" />
 
                 <ImageButton
                     android:id="@+id/btn_to_name"

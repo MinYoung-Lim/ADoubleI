@@ -1,24 +1,74 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/first"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <GridView
-        android:id="@+id/gridView"
+    <LinearLayout
+        android:id="@+id/second"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:maxWidth="50dp"
+            android:maxHeight="50dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/mypage" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/third"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:columnWidth="100dp"
-        android:horizontalSpacing="10dp"
-        android:verticalSpacing="10dp"
-        android:numColumns="auto_fit" >
-    </GridView>
+        android:orientation="vertical">
 
-    <ImageButton
-        android:id="@+id/UploadButton"
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/RecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/upload" />
+        android:paddingLeft="0dp"
+        android:paddingTop="100dp"
+        android:paddingRight="0dp"
+        android:paddingBottom="0dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+    <LinearLayout
+        android:id="@+id/lila_background"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/main_image"
+        android:orientation="vertical"
+        android:paddingLeft="150dp"
+        android:paddingTop="200dp"
+        android:paddingRight="150dp"
+        android:paddingBottom="0dp"
+        android:scaleType="fitEnd">
+
+
+        <ImageButton
+            android:id="@+id/UploadButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:backgroundTint="#FDFAFA"
+            android:maxWidth="300dp"
+            android:maxHeight="150dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/upload" />
+
+    </LinearLayout>
 
 </LinearLayout>
 

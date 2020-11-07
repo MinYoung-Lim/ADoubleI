@@ -24,7 +24,7 @@ public class MainUpload extends AppCompatActivity {
                 R.layout.row,       // GridView 항목의 레이아웃 row.xml
                 img);    // 데이터
 
-        GridView gv = (GridView)findViewById(R.id.gridView);
+        GridView gv = (GridView)findViewById(R.id.RecyclerView);
         gv.setAdapter(adapter);  // 커스텀 아답타를 GridView 에 적용
 
 

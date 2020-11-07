@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools"
     android:id="@+id/first"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -39,7 +40,8 @@
         android:paddingLeft="0dp"
         android:paddingTop="100dp"
         android:paddingRight="0dp"
-        android:paddingBottom="0dp">
+        android:paddingBottom="0dp"
+        bind:item="@{movieList}">
 
     </androidx.recyclerview.widget.RecyclerView>
 

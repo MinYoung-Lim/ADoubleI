@@ -63,7 +63,7 @@
         <activity android:name=".InputPassword"/>
         <activity android:name=".ReinputPassword"/>
         <activity android:name=".InputFingerprint"/>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainUpload"/>
 
 
 

@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
 
         findViewById(R.id.btn_to_signup).setOnClickListener(onClickListener);
         findViewById(R.id.loginButton).setOnClickListener(onClickListener);
-        mEtPassword = (EditText) findViewById(R.id.passwordEditText);
+        mEtPassword = (EditText) findViewById(R.id.passwordCheckEditText);
         mEtPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
 
@@ -64,10 +64,10 @@ public class LoginActivity extends AppCompatActivity {
                     Log.e("클릭","클릭");
                     Intent intent = getIntent();
                     String name = intent.getStringExtra("name");
-                    Intent intent2 = new Intent(LoginActivity.this, MainActivity.class);
+                    Intent intent2 = new Intent(LoginActivity.this, MainUpload.class);
                     intent2.putExtra("name",name);
 
-                      signin();
+                    signin();
                     startActivity(intent2);
 
 
@@ -84,15 +84,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void signin(){
 
-
-
-
-
         String email = ((EditText)findViewById(R.id.emailEditText)).getText().toString();
-        String password = ((EditText)findViewById(R.id.passwordEditText)).getText().toString();
-
-
-
+        String password = ((EditText)findViewById(R.id.passwordCheckEditText)).getText().toString();
 
 
         if(email.length() > 0 && password.length() > 0){
@@ -126,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this,msg, Toast.LENGTH_SHORT).show();
     }
     public void startMainActivity(){
-        Intent intent2 = new Intent(this, MainActivity.class);
+        Intent intent2 = new Intent(this, MainUpload.class);
         startActivity(intent2);
 
 

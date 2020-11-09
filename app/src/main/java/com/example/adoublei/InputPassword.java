@@ -68,7 +68,7 @@ public class InputPassword extends AppCompatActivity {
         String email = intent.getStringExtra("email");
         String name = intent.getStringExtra("name");
 
-        String password = ((EditText) findViewById(R.id.passwordEditText)).getText().toString();
+        String password = ((EditText) findViewById(R.id.passwordCheckEditText)).getText().toString();
 
         if (password.length() > 0) {
 

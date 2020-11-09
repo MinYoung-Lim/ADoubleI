@@ -112,9 +112,7 @@ public class ReinputPassword extends AppCompatActivity {
         String password = intent.getStringExtra("password");
         String email = intent.getStringExtra("email");
 
-
-
-        String passwordCheck = ((EditText)findViewById(R.id.editcheckTextPassword)).getText().toString();
+        String passwordCheck = ((EditText)findViewById(R.id.passwordCheckEditText)).getText().toString();
 
         if (passwordCheck.equals(password)) {
         if(passwordCheck.length()>0) {

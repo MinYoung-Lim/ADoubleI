@@ -34,7 +34,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/RecyclerView"
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="0dp"
@@ -60,7 +60,7 @@
 
 
         <ImageButton
-            android:id="@+id/UploadButton"
+            android:id="@+id/btn_upload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"

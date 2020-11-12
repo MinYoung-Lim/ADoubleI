@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DatabaseReference;
@@ -34,18 +34,18 @@ import java.util.zip.InflaterInputStream;
 
 public class MainUpload extends AppCompatActivity {
 
-   RecyclerView mRecyclerView = null;
-   MyAdapter myAdapter=null;
-   ArrayList<ItemObject> mItem = new ArrayList<ItemObject>();
+    RecyclerView mRecyclerView = null;
+    MyAdapter myAdapter=null;
+    ArrayList<ItemObject> mItem = new ArrayList<ItemObject>();
 
     private String text;
     public String encryptText2;
     private Uri filePath;
     private ImageButton btn_upload;
-    private ImageView imageView2;
+    private ImageView imageView;
 
 
-
+private GridLayoutManager mGridLayoutManager;
     private String EncryptImg="";
     private String DecryptImg="";
     private String bitmapToString="";
@@ -58,18 +58,19 @@ public class MainUpload extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        btn_upload = findViewById(R.id.btn_upload);
+        btn_upload = findViewById(R.id.button_main_insert);
 
-        mRecyclerView = findViewById(R.id.recyclerView);
-        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mRecyclerView = findViewById(R.id.recyclerview_main_list);
+        int numberOfColumns = 3;
+        GridLayoutManager mGridLayoutManager = new GridLayoutManager(this,numberOfColumns);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
 
         mItem = new ArrayList<>();
 
         myAdapter = new MyAdapter(mItem);
         mRecyclerView.setAdapter(myAdapter);
 
-        DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(mRecyclerView.getContext(),mLinearLayoutManager.getOrientation());
+        DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(mRecyclerView.getContext(),mGridLayoutManager.getOrientation());
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
 
@@ -88,7 +89,7 @@ public class MainUpload extends AppCompatActivity {
 
     }
     //결과 처리
-   @Override
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -108,7 +109,6 @@ public class MainUpload extends AppCompatActivity {
 
             try {
 
-
                 // Uri파일로 bitmap resize
                 //resize(getApplicationContext(), filePath, 1000);
 
@@ -122,7 +122,7 @@ public class MainUpload extends AppCompatActivity {
 
                 // 키 설정
 
-         //       Glide.with(this).load(filePath).into(imageView2);
+                //       Glide.with(this).load(filePath).into(imageView2);
 
 
                 final String secretKey = "love";
@@ -137,22 +137,22 @@ public class MainUpload extends AppCompatActivity {
                 DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
                 //  DatabaseReference conditionRef = mRootRef.child(name).child("암호화된 이미지").push();
                 //   conditionRef.setValue(EncryptImg);
-                mRootRef.child(name).child("암호화된 이미지").push().setValue(EncryptImg);
+                mRootRef.child("users").child(name).child("암호화된 이미지").push().setValue(EncryptImg);
 
-                imageView2 = findViewById(R.id.imageView2);
+                imageView = findViewById(R.id.photo_listitem);
 
 
                 // 복호화
                 DecryptImg = Cryptor.decrypt(EncryptImg, secretKey);
                 stringToBitmap = StringToBitmap(DecryptImg);
-                imageView2.setImageBitmap(stringToBitmap);
+                imageView.setImageBitmap(stringToBitmap);
 
                 Log.e("복호화된이미지", DecryptImg);
 
 
                 // 복호화된 이미지 업로드
                 DatabaseReference mRootRef2 = FirebaseDatabase.getInstance().getReference();
-                mRootRef2.child(name).child("복호화된 이미지").push().setValue(DecryptImg);
+                mRootRef2.child("users").child(name).child("복호화된 이미지").push().setValue(DecryptImg);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -181,7 +181,7 @@ public class MainUpload extends AppCompatActivity {
 
 
 
-  //*    Bitmap을 String형으로 변환
+    //*    Bitmap을 String형으로 변환
 
     public static String BitmapToString(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -192,7 +192,7 @@ public class MainUpload extends AppCompatActivity {
     }
 
 
-   //* Bitmap을 byte배열로 변환
+    //* Bitmap을 byte배열로 변환
 
     public static byte[] BitmapToByteArray(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -260,7 +260,7 @@ public class MainUpload extends AppCompatActivity {
     /**
      * 16진 문자열을 byte 배열로 변환한다.
      */
-       private static byte[] hexToByteArray(String hex) {
+    private static byte[] hexToByteArray(String hex) {
         if (hex == null || hex.length() % 2 != 0) {
             return new byte[]{};
         }
@@ -303,4 +303,3 @@ public class MainUpload extends AppCompatActivity {
     }
 
 }
-

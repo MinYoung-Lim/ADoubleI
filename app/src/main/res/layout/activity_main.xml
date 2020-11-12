@@ -1,76 +1,37 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/tools"
-    android:id="@+id/first"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
-    <LinearLayout
-        android:id="@+id/second"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/imageButton2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:maxWidth="50dp"
-            android:maxHeight="50dp"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/mypage" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/third"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recyclerview_main_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="0dp"
-        android:paddingTop="100dp"
-        android:paddingRight="0dp"
-        android:paddingBottom="0dp"
-        bind:item="@{movieList}">
+        android:layout_height="0dp"
+        app:layout_constraintVertical_weight="9"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/button_main_insert"
+        android:scrollbarFadeDuration="0"
+        android:scrollbarSize="5dp"
+        android:scrollbarThumbVertical="@android:color/darker_gray"
+        android:scrollbars="vertical"/>
 
-    </androidx.recyclerview.widget.RecyclerView>
-
-
-    <LinearLayout
-        android:id="@+id/lila_background"
+    <ImageButton
+        android:id="@+id/button_main_insert"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:background="@drawable/main_image"
-        android:orientation="vertical"
-        android:paddingLeft="150dp"
-        android:paddingTop="200dp"
-        android:paddingRight="150dp"
-        android:paddingBottom="0dp"
-        android:scaleType="fitEnd">
+        android:layout_height="0dp"
+        app:layout_constraintVertical_weight="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recyclerview_main_list"
+        android:text="데이터 추가"/>
 
-
-        <ImageButton
-            android:id="@+id/btn_upload"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:backgroundTint="#FDFAFA"
-            android:maxWidth="300dp"
-            android:maxHeight="150dp"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/upload" />
-
-    </LinearLayout>
-
-</LinearLayout>
-
+</androidx.constraintlayout.widget.ConstraintLayout>

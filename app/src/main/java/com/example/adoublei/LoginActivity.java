@@ -62,12 +62,11 @@ public class LoginActivity extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.loginButton:
                     Log.e("클릭","클릭");
+                    signin();
                     Intent intent = getIntent();
                     String name = intent.getStringExtra("name");
                     Intent intent2 = new Intent(LoginActivity.this, MainUpload.class);
                     intent2.putExtra("name",name);
-
-                    signin();
                     startActivity(intent2);
 
 

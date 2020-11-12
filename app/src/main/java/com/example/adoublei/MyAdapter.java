@@ -2,6 +2,7 @@ package com.example.adoublei;
 
 import android.content.Context;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +28,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.RecyclerViewHolder
 
         public RecyclerViewHolders(@NonNull View itemView) {
             super(itemView);
-            this.title = (TextView) itemView.findViewById(R.id.title);
-            this.imageView = (ImageView) itemView.findViewById(R.id.imageView2);
+            this.title = (TextView) itemView.findViewById(R.id.title_listitem);
+            this.imageView = (ImageView) itemView.findViewById(R.id.photo_listitem);
         }
     }
 
@@ -38,20 +39,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.RecyclerViewHolder
     }
     @NonNull
     @Override
-    public RecyclerViewHolders onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem,parent,false);
+    public RecyclerViewHolders onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.listitem,viewGroup,false);
         RecyclerViewHolders viewHolders=new RecyclerViewHolders(view);
         return viewHolders;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyAdapter.RecyclerViewHolders holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewHolders holder, int position) {
 
         holder.title.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-        holder.imageView.setImageURI(mItem.get(position).getPhoto());
-     //   Glide.with(MainUpload).load(mItem.get(position).getPhoto()).centerCrop().into(holder.imageView);
-
+        holder.title.setGravity(Gravity.CENTER);
         holder.title.setText(mItem.get(position).getTitle());
+        holder.imageView.setImageURI(mItem.get(position).getPhoto());
+//        Glide.with(this.context).load(mItem.get(position).getPhoto()).centerCrop().into(holder.imageView);
+
+
 
     }
 

@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -21,16 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.zip.DeflaterOutputStream;
-import java.util.zip.InflaterInputStream;
 
 public class MainUpload extends AppCompatActivity {
 
@@ -46,12 +38,22 @@ public class MainUpload extends AppCompatActivity {
 
 
 private GridLayoutManager mGridLayoutManager;
-    private String EncryptImg="";
+  /*  private String EncryptImg="";
     private String DecryptImg="";
     private String bitmapToString="";
     private Bitmap stringToBitmap;
+
+    */
     private static final String charsetName = "UTF-8";
-    private String useruuid = null;
+  //  private String useruuid = null;
+private  String useruuid = "name";
+
+
+    private byte[] seed = useruuid.getBytes();
+    private byte[] Byte_image;
+    private byte[] EncryptImg;
+    private byte[] DecryptImg;
+    private Bitmap Bitmap_image;
 
     private View view;
 
@@ -59,6 +61,9 @@ private GridLayoutManager mGridLayoutManager;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         btn_upload = findViewById(R.id.button_main_insert);
+        imageView = findViewById(R.id.photo_listitem);
+
+
 
         mRecyclerView = findViewById(R.id.recyclerview_main_list);
         int numberOfColumns = 3;
@@ -107,7 +112,111 @@ private GridLayoutManager mGridLayoutManager;
             mItem.add(item);
             myAdapter.notifyDataSetChanged();
 
+
             try {
+                // Uri파일로 bitmap resize
+                //resize(getApplicationContext(), filePath, 1000);
+
+                Bitmap ImgBitmap = null;
+
+                //ImgBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                ImgBitmap = resize(getApplicationContext(), filePath, 1000);
+
+                Byte_image = BitmapToByteArray(ImgBitmap);
+                AESCoderAndriod aesCoderAndriod = new AESCoderAndriod();
+
+
+                // 이미지 암호화
+                EncryptImg = aesCoderAndriod.encrypt(seed, Byte_image);
+                String EncryptString = EncryptImg.toString();
+                Log.e("Encrypt", EncryptString);
+
+                // 암호화된 이미지 업로드
+                DatabaseReference mRootRef= FirebaseDatabase.getInstance().getReference();
+                mRootRef.child("users").child(name).child("Encrypt").push().setValue(EncryptString);
+
+
+
+
+                // 복호화
+                DecryptImg = aesCoderAndriod.decrypt(seed, EncryptImg);
+                //stringToBitmap = StringToBitmap(DecryptImg);
+                Bitmap_image = byteArrayToBitmap(DecryptImg);
+                imageView.setImageBitmap(Bitmap_image);
+
+
+                String DecryptString = BitmapToString(Bitmap_image);
+                Log.e("Decrypt", DecryptString);
+
+
+
+                // 복호화된 이미지 업로드
+                DatabaseReference mRootRef2= FirebaseDatabase.getInstance().getReference();
+                mRootRef2.child("users").child(name).child("Decrypt").push().setValue(DecryptString);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
+    //Bitmap을 String형으로 변환
+    public static String BitmapToString(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 15, baos);
+        byte[] bytes = baos.toByteArray();
+        String temp = Base64.encodeToString(bytes, Base64.DEFAULT);
+        return temp;
+    }
+
+
+    //Bitmap을 byte배열로 변환
+    public static byte[] BitmapToByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+        return baos.toByteArray();
+    }
+
+    //byte를 Bitmap으로 변환
+    public Bitmap byteArrayToBitmap( byte[] byteArray ) {
+        Bitmap bitmap = BitmapFactory.decodeByteArray( byteArray, 0, byteArray.length ) ;
+        return bitmap ;
+    }
+
+    private Bitmap resize(Context context, Uri uri, int resize) {
+        Bitmap resizeBitmap = null;
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        try {
+            BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options); // 1번
+
+            int width = options.outWidth;
+            int height = options.outHeight;
+            int samplesize = 1;
+
+            while (true) {//2번
+                if (width / 2 < resize || height / 2 < resize)
+                    break;
+                width /= 2;
+                height /= 2;
+                samplesize *= 2;
+            }
+
+            options.inSampleSize = samplesize;
+            Bitmap bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options); //3번
+            resizeBitmap = bitmap;
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return resizeBitmap;
+
+    }
+}
+
+     /*       try {
 
                 // Uri파일로 bitmap resize
                 //resize(getApplicationContext(), filePath, 1000);
@@ -139,7 +248,6 @@ private GridLayoutManager mGridLayoutManager;
                 //   conditionRef.setValue(EncryptImg);
                 mRootRef.child("users").child(name).child("암호화된 이미지").push().setValue(EncryptImg);
 
-                imageView = findViewById(R.id.photo_listitem);
 
 
                 // 복호화
@@ -158,12 +266,12 @@ private GridLayoutManager mGridLayoutManager;
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
 
 
 
-    private void startToast(String msg){
+ /*   private void startToast(String msg){
         Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
     }
 
@@ -203,16 +311,17 @@ private GridLayoutManager mGridLayoutManager;
     /**
      * String 객체를 압축하여 String 으로 리턴한다. * @param string * @return
      */
-    public synchronized static String compressString(String string) {
+ /*   public synchronized static String compressString(String string) {
         return byteToString(compress(string));
     }
 
     /**
      * 압축된 스트링을 복귀시켜서 String 으로 리턴한다. * @param compressed * @return
      */
-    public synchronized static String decompressString(String compressed) {
+ /*   public synchronized static String decompressString(String compressed) {
         return decompress(hexToByteArray(compressed));
     }
+
 
     private static String byteToString(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
@@ -260,46 +369,3 @@ private GridLayoutManager mGridLayoutManager;
     /**
      * 16진 문자열을 byte 배열로 변환한다.
      */
-    private static byte[] hexToByteArray(String hex) {
-        if (hex == null || hex.length() % 2 != 0) {
-            return new byte[]{};
-        }
-        byte[] bytes = new byte[hex.length() / 2];
-        for (int i = 0; i < hex.length(); i += 2) {
-            byte value = (byte) Integer.parseInt(hex.substring(i, i + 2), 16);
-            bytes[(int) Math.floor(i / 2)] = value;
-        }
-        return bytes;
-    }
-
-    private Bitmap resize(Context context, Uri uri, int resize) {
-        Bitmap resizeBitmap = null;
-
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        try {
-            BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options); // 1번
-
-            int width = options.outWidth;
-            int height = options.outHeight;
-            int samplesize = 1;
-
-            while (true) {//2번
-                if (width / 2 < resize || height / 2 < resize)
-                    break;
-                width /= 2;
-                height /= 2;
-                samplesize *= 2;
-            }
-
-            options.inSampleSize = samplesize;
-            Bitmap bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options); //3번
-            resizeBitmap = bitmap;
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return resizeBitmap;
-
-    }
-
-}

@@ -71,7 +71,7 @@
             android:id="@+id/button_main_insert"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:backgroundTint="#FFFFFF"
+            style="?android:borderlessButtonStyle"
             android:src="@drawable/upload"
             android:layout_gravity="center"
             android:maxHeight="400dp"

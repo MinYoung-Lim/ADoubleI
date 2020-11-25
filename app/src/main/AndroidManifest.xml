@@ -59,11 +59,15 @@
         <activity android:name=".InputEmail"/>
 
 
+
         <activity android:name=".InputName"/>
         <activity android:name=".InputPassword"/>
         <activity android:name=".ReinputPassword"/>
         <activity android:name=".InputFingerprint"/>
+
         <activity android:name=".MainUpload"/>
+        <activity android:name=".DetailActivity"/>
+
 
 
 

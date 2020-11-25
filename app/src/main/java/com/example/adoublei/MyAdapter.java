@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +21,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.RecyclerViewHolder
 
     private Context context;
     private  ArrayList<ItemObject> mItem;
+    private AdapterView.OnItemClickListener mListener = null;
+
+
 
     public class RecyclerViewHolders extends RecyclerView.ViewHolder {
 
@@ -30,7 +34,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.RecyclerViewHolder
             super(itemView);
             this.title = (TextView) itemView.findViewById(R.id.title_listitem);
             this.imageView = (ImageView) itemView.findViewById(R.id.photo_listitem);
+
+
         }
+
     }
 
     public MyAdapter(ArrayList<ItemObject> item){
@@ -58,10 +65,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.RecyclerViewHolder
 
     }
 
+
     @Override
     public int getItemCount() {
         return (null != mItem ? mItem.size() : 0);
     }
+}
 
    /*     private Context context;
         private ArrayList<ItemObject> itemList;
@@ -118,6 +127,5 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.RecyclerViewHolder
             }
         }*/
 
-    }
 
 

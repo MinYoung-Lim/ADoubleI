@@ -1,4 +1,4 @@
-package com.example.adoublei;
+/*package com.example.adoublei;
 
 public class Item {
 
@@ -13,3 +13,4 @@ public class Item {
 }
 
 
+*/

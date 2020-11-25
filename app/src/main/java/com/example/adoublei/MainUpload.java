@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -19,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -36,8 +39,9 @@ public class MainUpload extends AppCompatActivity {
     private ImageButton btn_upload;
     private ImageView imageView;
 
+    ValueEventListener mValueEventListener;
 
-private GridLayoutManager mGridLayoutManager;
+    private GridLayoutManager mGridLayoutManager;
   /*  private String EncryptImg="";
     private String DecryptImg="";
     private String bitmapToString="";
@@ -78,6 +82,24 @@ private  String useruuid = "name";
         DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(mRecyclerView.getContext(),mGridLayoutManager.getOrientation());
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
+        mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), mRecyclerView, new ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                ItemObject itemObject = mItem.get(position);
+                Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
+
+                intent.putExtra("title",itemObject.getTitle());
+                intent.putExtra("photo",itemObject.getPhoto());
+
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+            }
+        }));
+
+
 
         btn_upload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +114,58 @@ private  String useruuid = "name";
         });
 
 
+
+
     }
+    public interface ClickListener {
+        void onClick(View view, int position);
+
+        void onLongClick(View view, int position);
+    }
+
+    public static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
+
+        private GestureDetector gestureDetector;
+        private MainUpload.ClickListener clickListener;
+
+        public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final MainUpload.ClickListener clickListener) {
+            this.clickListener = clickListener;
+            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public boolean onSingleTapUp(MotionEvent e) {
+                    return true;
+                }
+
+                @Override
+                public void onLongPress(MotionEvent e) {
+                    View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                    if (child != null && clickListener != null) {
+                        clickListener.onLongClick(child, recyclerView.getChildAdapterPosition(child));
+                    }
+                }
+            });
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+            View child = rv.findChildViewUnder(e.getX(), e.getY());
+            if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
+                clickListener.onClick(child, rv.getChildAdapterPosition(child));
+            }
+            return false;
+        }
+
+        @Override
+        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+        }
+    }
+
+
+
     //결과 처리
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -126,6 +199,7 @@ private  String useruuid = "name";
                 AESCoderAndriod aesCoderAndriod = new AESCoderAndriod();
 
 
+
                 // 이미지 암호화
                 EncryptImg = aesCoderAndriod.encrypt(seed, Byte_image);
                 String EncryptString = EncryptImg.toString();
@@ -133,10 +207,8 @@ private  String useruuid = "name";
 
                 // 암호화된 이미지 업로드
                 DatabaseReference mRootRef= FirebaseDatabase.getInstance().getReference();
-                mRootRef.child("users").child(name).child("Encrypt").push().setValue(EncryptString);
-
-
-
+                mRootRef.child(name);
+                mRootRef.child("Encrypt").push().setValue(EncryptString);
 
                 // 복호화
                 DecryptImg = aesCoderAndriod.decrypt(seed, EncryptImg);
@@ -152,7 +224,8 @@ private  String useruuid = "name";
 
                 // 복호화된 이미지 업로드
                 DatabaseReference mRootRef2= FirebaseDatabase.getInstance().getReference();
-                mRootRef2.child("users").child(name).child("Decrypt").push().setValue(DecryptString);
+                mRootRef2.child(name);
+                mRootRef2.child("Decrypt").push().setValue(DecryptString);
 
             } catch (Exception e) {
                 e.printStackTrace();

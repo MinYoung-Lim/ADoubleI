@@ -59,12 +59,10 @@
         android:orientation="vertical">
 
         <ImageView
-            android:paddingBottom="218dp"
             android:id="@+id/detail_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:srcCompat="@tools:sample/avatars"
-            android:scaleType="fitCenter"/>
+            tools:srcCompat="@tools:sample/avatars" />
     </LinearLayout>
 
 </LinearLayout>

@@ -49,7 +49,7 @@
 <!-- optional (needed if default theme has no action bar) -->
 
 
-        <activity android:name=".LoginActivity">
+        <activity android:name=".detailActivity2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

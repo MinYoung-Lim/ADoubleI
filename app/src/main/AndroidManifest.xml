@@ -49,17 +49,18 @@
 <!-- optional (needed if default theme has no action bar) -->
 
 
-        <activity android:name=".detailActivity2">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
         <activity android:name=".InputEmail"/>
-
-
-
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".detailActivity2"/>
         <activity android:name=".InputName"/>
         <activity android:name=".InputPassword"/>
         <activity android:name=".ReinputPassword"/>

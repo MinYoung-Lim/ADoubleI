@@ -31,6 +31,7 @@ public class DetailActivity extends AppCompatActivity {
     private ImageView detailPhoto;
     private TextView detailName;
     private ImageButton btn_download;
+    private ImageButton btn_back;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -40,9 +41,10 @@ public class DetailActivity extends AppCompatActivity {
         detailPhoto = findViewById(R.id.detail_image);
         detailName = findViewById(R.id.thename);
         btn_download = findViewById(R.id.btn_img_download);
+        btn_back = findViewById(R.id.btn_back);
 
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
 
         Uri photo = intent.getParcelableExtra("photo");
         final String title = intent.getStringExtra("title");
@@ -60,6 +62,13 @@ public class DetailActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(DetailActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
         ActivityCompat.requestPermissions(DetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
 
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailActivity.this,MainUpload.class);
+                startActivity(intent);
+            }
+        });
 
         btn_download.setOnClickListener(new View.OnClickListener() {
             @Override

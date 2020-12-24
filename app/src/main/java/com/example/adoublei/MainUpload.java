@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -38,6 +39,7 @@ public class MainUpload extends AppCompatActivity {
     private Uri filePath;
     private ImageButton btn_upload;
     private ImageView imageView;
+    private Button btn_delete;
 
     ValueEventListener mValueEventListener;
 
@@ -66,8 +68,7 @@ private  String useruuid = "name";
         setContentView(R.layout.activity_main);
         btn_upload = findViewById(R.id.button_main_insert);
         imageView = findViewById(R.id.photo_listitem);
-
-
+ //       btn_delete = findViewById(R.id.button_delete);
 
         mRecyclerView = findViewById(R.id.recyclerview_main_list);
         int numberOfColumns = 3;
@@ -112,6 +113,7 @@ private  String useruuid = "name";
 
             }
         });
+
 
 
 
@@ -186,17 +188,18 @@ private  String useruuid = "name";
             myAdapter.notifyDataSetChanged();
 
 
+            Bitmap ImgBitmap = null;
+
+            //ImgBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+            ImgBitmap = resize(getApplicationContext(), filePath, 300);
+
+            Byte_image = BitmapToByteArray(ImgBitmap);
+            AESCoderAndriod aesCoderAndriod = new AESCoderAndriod();
+
             try {
                 // Uri파일로 bitmap resize
                 //resize(getApplicationContext(), filePath, 1000);
 
-                Bitmap ImgBitmap = null;
-
-                //ImgBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                ImgBitmap = resize(getApplicationContext(), filePath, 1000);
-
-                Byte_image = BitmapToByteArray(ImgBitmap);
-                AESCoderAndriod aesCoderAndriod = new AESCoderAndriod();
 
 
 
@@ -262,6 +265,7 @@ private  String useruuid = "name";
         Bitmap resizeBitmap = null;
 
         BitmapFactory.Options options = new BitmapFactory.Options();
+
         try {
             BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options); // 1번
 
@@ -272,9 +276,9 @@ private  String useruuid = "name";
             while (true) {//2번
                 if (width / 2 < resize || height / 2 < resize)
                     break;
-                width /= 2;
-                height /= 2;
-                samplesize *= 2;
+                width /= 4;
+                height /= 4;
+                samplesize *= 4;
             }
 
             options.inSampleSize = samplesize;

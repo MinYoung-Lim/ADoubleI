@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
 
         findViewById(R.id.btn_to_signup).setOnClickListener(onClickListener);
         findViewById(R.id.loginButton).setOnClickListener(onClickListener);
-        mEtPassword = (EditText) findViewById(R.id.passwordCheckEditText);
+        mEtPassword = (EditText)findViewById(R.id.passwordCheckEditText);
         mEtPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
 

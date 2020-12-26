@@ -25,7 +25,7 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_input_pwd_real);
+        setContentView(R.layout.activity_re_input_pwd_real);
 
         tv_1 = findViewById(R.id.tv_1);
         tv_2 = findViewById(R.id.tv_2);
@@ -157,7 +157,7 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
 
 
                 // 업로드 후 메인 화면으로 이동
-                Intent intent2 = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent2 = new Intent(getApplicationContext(), MainUpload.class);
                 startActivity(intent2);
             }
             else{  // 비밀번호 다르면

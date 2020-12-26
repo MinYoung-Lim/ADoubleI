@@ -9,13 +9,15 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:scaleType="fitCenter"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="20dp"/>
 
     <TextView
         android:id="@+id/title_listitem"
         android:layout_width="100dp"
         android:layout_height="50dp"
+        android:scaleType="fitCenter"
         android:gravity="center"
+        android:layout_marginLeft="20dp"
         android:padding="10dp"
         android:textSize="8sp" />
 

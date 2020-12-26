@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,9 +39,11 @@ public class MainUpload extends AppCompatActivity {
     private String text;
     public String encryptText2;
     private Uri filePath;
-    private ImageButton btn_upload;
+    private Button btn_upload;
     private ImageView imageView;
     private Button btn_delete;
+    private ImageView mypage;
+    private DrawerLayout drawerLayout;
 
     ValueEventListener mValueEventListener;
 
@@ -66,9 +70,12 @@ private  String useruuid = "name";
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         btn_upload = findViewById(R.id.button_main_insert);
         imageView = findViewById(R.id.photo_listitem);
  //       btn_delete = findViewById(R.id.button_delete);
+        mypage = findViewById(R.id.mypage); //마이페이지 버튼
+        drawerLayout = findViewById(R.id.firstlayout); //마이페이지 레이아웃
 
         mRecyclerView = findViewById(R.id.recyclerview_main_list);
         int numberOfColumns = 3;
@@ -99,6 +106,13 @@ private  String useruuid = "name";
             public void onLongClick(View view, int position) {
             }
         }));
+
+        mypage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
 
 
 

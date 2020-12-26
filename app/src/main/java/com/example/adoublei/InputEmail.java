@@ -37,7 +37,7 @@ public class InputEmail extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
 
-        setContentView(R.layout.activity_input_email);
+        setContentView(R.layout.activity_input_email2);
 
 
         //   findViewById(R.id.loginButton).setOnClickListener(onClickListener);

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
+
 
         setContentView(R.layout.activity_login);
 
@@ -124,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
     private void startSignUpActivity(){
-        Intent intent = new Intent(this,InputEmail.class);
+        Intent intent = new Intent(this,InputEmailRealActivity.class);
         startActivity(intent);
     }
 }

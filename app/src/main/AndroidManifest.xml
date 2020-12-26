@@ -3,12 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.adoublei">
 
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -37,18 +36,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <!--    <activity android:name=".CanvasTestActivity" />
+        <activity android:name=".LoginPwdActivity"></activity>
+        <activity android:name=".ChangePwdActivity" />
+        <activity android:name=".LoginFingerprintActivity" />
+        <activity android:name=".RegisterFingerActivity" />
+        <activity android:name=".ReInputPwdRealActivity" />
+        <activity android:name=".InputPwdRealActivity" />
+        <activity android:name=".InputNameRealActivity" />
+        <activity android:name=".InputEmailRealActivity" />
+        <!--
+            <activity android:name=".CanvasTestActivity" />
             <activity android:name=".TextRecognitionActivity2" />
             <activity android:name=".TextRecognitionActivity" />
             <activity android:name=".LoginTestActivity" />
             <activity android:name=".CropActivity" />
             <activity android:name=".ScanActivity9" />
-            <activity android:name=".ScanActivity8" /> -->
-
-<!-- optional (needed if default theme has no action bar) -->
-
-
+            <activity android:name=".ScanActivity8" />
+        -->
+        <!-- optional (needed if default theme has no action bar) -->
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -56,21 +61,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-        <activity android:name=".InputEmail"/>
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".detailActivity2"/>
-        <activity android:name=".InputName"/>
-        <activity android:name=".InputPassword"/>
-        <activity android:name=".ReinputPassword"/>
-        <activity android:name=".InputFingerprint"/>
-
-        <activity android:name=".MainUpload"/>
-        <activity android:name=".DetailActivity"/>
-
-
-
+        <activity android:name=".InputEmail" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".detailActivity2" />
+        <activity android:name=".InputName" />
+        <activity android:name=".InputPassword" />
+        <activity android:name=".ReinputPassword" />
+        <activity android:name=".InputFingerprint" />
+        <activity android:name=".MainUpload" />
+        <activity android:name=".DetailActivity" />
 
         <meta-data
             android:name="com.google.android.actions"
@@ -85,8 +84,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
-
     </application>
-
 
 </manifest>

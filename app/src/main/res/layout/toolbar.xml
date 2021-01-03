@@ -19,8 +19,8 @@
         android:layout_marginLeft="20dp"
         android:adjustViewBounds="true"
         android:background="#FFFFFF"
-        android:maxWidth="50dp"
-        android:maxHeight="50dp"
+        android:maxWidth="40dp"
+        android:maxHeight="40dp"
         android:scaleType="fitCenter"
         app:srcCompat="@drawable/mypage" />
 

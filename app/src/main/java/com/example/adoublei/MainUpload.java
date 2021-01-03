@@ -10,11 +10,16 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -30,6 +35,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import static android.widget.Toast.LENGTH_SHORT;
+
 public class MainUpload extends AppCompatActivity {
 
     RecyclerView mRecyclerView = null;
@@ -44,6 +51,8 @@ public class MainUpload extends AppCompatActivity {
     private Button btn_delete;
     private ImageView mypage;
     private DrawerLayout drawerLayout;
+    private boolean isChecked = false;
+
 
     ValueEventListener mValueEventListener;
 
@@ -76,6 +85,7 @@ private  String useruuid = "name";
  //       btn_delete = findViewById(R.id.button_delete);
         mypage = findViewById(R.id.mypage); //마이페이지 버튼
         drawerLayout = findViewById(R.id.firstlayout); //마이페이지 레이아웃
+
 
         mRecyclerView = findViewById(R.id.recyclerview_main_list);
         int numberOfColumns = 3;
@@ -113,7 +123,6 @@ private  String useruuid = "name";
                 drawerLayout.openDrawer(Gravity.LEFT);
             }
         });
-
 
 
         btn_upload.setOnClickListener(new View.OnClickListener() {
@@ -305,6 +314,25 @@ private  String useruuid = "name";
         return resizeBitmap;
 
     }
+
+    public boolean onPrepareOptionMenu(Menu menu){
+        MenuItem checkable = menu.findItem(R.id.fingerprintTF);
+        checkable.setChecked(isChecked);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.fingerprintTF:
+                isChecked = !item.isChecked();
+                item.setChecked(isChecked);
+                return true;
+            default:
+                return false;
+        }
+    }
+
+
 }
 
      /*       try {

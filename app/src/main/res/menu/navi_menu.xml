@@ -3,18 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu1"
-        android:title="menu1"
+        android:id="@+id/userName"
+        android:title="이름"
         app:showAsAction="never"></item>
-    <item
-        android:id="@+id/menu2"
-        android:title="menu2"
-        app:showAsAction="never"
 
-        ></item>
     <item
-        android:id="@+id/menu3"
-        android:title="menu3"
+        android:id="@+id/fingerprintTF"
+        android:title="지문 인식 사용"
+        app:actionLayout="@layout/switch_item"
+        app:showAsAction="always"
+        android:checkable="true"
+        app:actionViewClass="android.widget.Switch" />
+
+    <item
+        android:id="@+id/pwChange"
+        android:title="비밀번호 변경"
         app:showAsAction="never"
         ></item>
 </menu>

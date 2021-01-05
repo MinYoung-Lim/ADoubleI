@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+      //  setContentView(R.layout.activity_main);
 /*
         btn_send = findViewById(R.id.btn_send);
         btn_upload = findViewById(R.id.btn_upload);

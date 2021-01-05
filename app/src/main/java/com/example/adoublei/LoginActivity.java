@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -39,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance();
 
 
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login);   //갤럭시노트3 공기계로 실행해보는데 여기서 오류뜸 -> 아예 실행안되고 중지됨! 에뮬레이터는 잘돼
 
         findViewById(R.id.btn_to_signup).setOnClickListener(onClickListener);
         findViewById(R.id.loginButton).setOnClickListener(onClickListener);

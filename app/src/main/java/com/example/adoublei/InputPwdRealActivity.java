@@ -1,13 +1,13 @@
 package com.example.adoublei;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class InputPwdRealActivity extends AppCompatActivity {
 
@@ -150,10 +150,16 @@ public class InputPwdRealActivity extends AppCompatActivity {
     }
 
     private void checkPwdIsFull() {
+        Intent intent = getIntent();
+        String email = intent.getStringExtra("email");
+        String name = intent.getStringExtra("name");
+
         if (pwd.length()==6){
-            Intent intent = new Intent(getApplicationContext(), ReInputPwdRealActivity.class);
-            intent.putExtra("pwd", pwd.toString());  // 초기에 입력한 비밀번호 값 전달
-            startActivity(intent);
+            Intent intent2 = new Intent(getApplicationContext(), ReInputPwdRealActivity.class);
+            intent2.putExtra("email", email);
+            intent2.putExtra("name", name);
+            intent2.putExtra("pwd", pwd.toString());  // 초기에 입력한 비밀번호 값 전달
+            startActivity(intent2);
         }
     }
 

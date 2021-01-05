@@ -42,7 +42,9 @@
             android:scaleType="fitCenter"
             android:text="이름"
             android:textColor="#838383"
-            android:textSize="30dp" />
+            android:textSize="30dp"
+            />
+
 
         <ImageButton
             android:id="@+id/btn_img_download"

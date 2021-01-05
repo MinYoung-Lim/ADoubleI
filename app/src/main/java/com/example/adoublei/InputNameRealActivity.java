@@ -1,11 +1,13 @@
 package com.example.adoublei;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class InputNameRealActivity extends AppCompatActivity {
 
@@ -22,8 +24,7 @@ public class InputNameRealActivity extends AppCompatActivity {
         iv_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), InputPwdRealActivity.class);
-                startActivity(intent);
+                inputname();
             }
         });
 
@@ -40,6 +41,31 @@ public class InputNameRealActivity extends AppCompatActivity {
     public void onBackPressed()  // 뒤로가기 방지
     {
         //super.onBackPressed();
+    }
+    private void inputname(){
+
+        Intent intent = getIntent();
+        String email = intent.getStringExtra("email");
+        String name = ((EditText)findViewById(R.id.et_name)).getText().toString();
+
+
+        if(name.length()>0){
+            Intent intent2 = new Intent(getApplicationContext(), InputPwdRealActivity.class);
+            intent2.putExtra("email",email);
+            intent2.putExtra("name", name);
+            startActivity(intent2);
+
+
+        }else{
+            startToast("이름을 입력해주세요.");
+
+        }
+
+    }
+
+
+    private void startToast(String msg){
+        Toast.makeText(this,msg, Toast.LENGTH_SHORT).show();
     }
 
 }

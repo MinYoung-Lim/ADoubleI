@@ -2,6 +2,7 @@ package com.example.adoublei;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,12 +11,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -29,10 +32,12 @@ public class DetailActivity extends AppCompatActivity {
     private byte[] Byte_image;
 
     private ImageView detailPhoto;
-    private TextView detailName;
+    private EditText detailName;
     private ImageButton btn_download;
     private ImageButton btn_back;
-
+  //  private TextView showName;
+    private String str;
+    private String temp;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +45,10 @@ public class DetailActivity extends AppCompatActivity {
 
         detailPhoto = findViewById(R.id.detail_image);
         detailName = findViewById(R.id.thename);
+     //   showName = findViewById(R.id.showTheName);
         btn_download = findViewById(R.id.btn_img_download);
         btn_back = findViewById(R.id.btn_back);
+
 
 
         final Intent intent = getIntent();
@@ -66,20 +73,53 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DetailActivity.this,MainUpload.class);
+                intent.putExtra("title", str);
                 startActivity(intent);
             }
         });
 
+        final String[] listArray = {"PNG","PDF"};
+        final int[] selectedIndex = {0};
         btn_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveToGallery();
-                Toast.makeText(DetailActivity.this,"다운로드에 성공했습니다.",Toast.LENGTH_SHORT);
+                AlertDialog.Builder dialog = new AlertDialog.Builder(DetailActivity.this);
+                dialog.setTitle("DownLoad");
+                dialog.setItems(listArray,new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(listArray[which]=="PNG"){
+                            saveToGallery();
+                            Toast.makeText(DetailActivity.this, "갤러리에 저장되었습니다.", Toast.LENGTH_LONG);
+                        }else{
+                            //pdf
+                        }
+                    }
+                }).create().show();
             }
         });
 
 
+        detailName.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
+                    //editText에서 받은 문자열 저장
+                    str = detailName.getText().toString();
+                    detailName.setText(str);
+                    return true;
+                }
+                return false;
+
+            }
+        });
+
     } // end onCreate()
+
+    private void startToast(String msg){
+        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
+    }
 
     //Bitmap을 String형으로 변환
     public static String BitmapToString(Bitmap bitmap) {
@@ -135,6 +175,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void saveToGallery(){
+
         BitmapDrawable bitmapDrawable = (BitmapDrawable) detailPhoto.getDrawable();
         Bitmap bitmap = bitmapDrawable.getBitmap();
 

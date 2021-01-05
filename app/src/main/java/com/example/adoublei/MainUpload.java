@@ -15,11 +15,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Switch;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -34,8 +30,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-
-import static android.widget.Toast.LENGTH_SHORT;
 
 public class MainUpload extends AppCompatActivity {
 
@@ -65,7 +59,7 @@ public class MainUpload extends AppCompatActivity {
     */
     private static final String charsetName = "UTF-8";
   //  private String useruuid = null;
-private  String useruuid = "name";
+    private  String useruuid = "name";
 
 
     private byte[] seed = useruuid.getBytes();
@@ -82,7 +76,7 @@ private  String useruuid = "name";
 
         btn_upload = findViewById(R.id.button_main_insert);
         imageView = findViewById(R.id.photo_listitem);
- //       btn_delete = findViewById(R.id.button_delete);
+ //     btn_delete = findViewById(R.id.button_delete);
         mypage = findViewById(R.id.mypage); //마이페이지 버튼
         drawerLayout = findViewById(R.id.firstlayout); //마이페이지 레이아웃
 
@@ -103,12 +97,11 @@ private  String useruuid = "name";
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), mRecyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
+
                 ItemObject itemObject = mItem.get(position);
                 Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
-
                 intent.putExtra("title",itemObject.getTitle());
                 intent.putExtra("photo",itemObject.getPhoto());
-
                 startActivity(intent);
             }
 
@@ -136,9 +129,6 @@ private  String useruuid = "name";
 
             }
         });
-
-
-
 
 
     }
@@ -200,12 +190,13 @@ private  String useruuid = "name";
         String name = intent.getStringExtra("name");
 
 
+
         //request코드가 0이고 OK를 선택했고 data에 뭔가가 들어 있다면
         if (requestCode == 0 && resultCode == RESULT_OK) {
 
             filePath = data.getData();
 
-            ItemObject item = new ItemObject("주민등록증",filePath);
+            ItemObject item = new ItemObject("주민등록증증",filePath);
 
             mItem.add(item);
             myAdapter.notifyDataSetChanged();
@@ -222,9 +213,6 @@ private  String useruuid = "name";
             try {
                 // Uri파일로 bitmap resize
                 //resize(getApplicationContext(), filePath, 1000);
-
-
-
 
                 // 이미지 암호화
                 EncryptImg = aesCoderAndriod.encrypt(seed, Byte_image);

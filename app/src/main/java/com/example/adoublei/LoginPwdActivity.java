@@ -1,13 +1,13 @@
 package com.example.adoublei;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginPwdActivity extends AppCompatActivity {
 
@@ -150,6 +150,7 @@ public class LoginPwdActivity extends AppCompatActivity {
 
     private void checkPwdIsFull() {
         if (pwd.length()==6){
+
 
             // Firebase에서 가져온 비밀번호와 입력받은 pwd가 같은지 비교 후 같을때에만 아래의 코드 실행하도록 짜야함!!!
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);

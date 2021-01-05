@@ -1,7 +1,5 @@
 package com.example.adoublei;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +7,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class ReInputPwdRealActivity extends AppCompatActivity {
 
@@ -21,6 +24,8 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
     ImageView iv_backspace, iv_back;
     private StringBuffer pwd2 = new StringBuffer("");  // 이 액티비티에서 입력받은 비밀번호
     String pwd;
+    String email;
+    String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,8 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
+        email = intent.getStringExtra("email");
+        name = intent.getStringExtra("name");
         pwd = intent.getStringExtra("pwd");  // 이전 액티비티에서 받아온 pwd저장
 
     }
@@ -154,7 +161,7 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
             if(pwd.equals(pwd2.toString())){  // 비밀번호가 같으면 Firebase에 업로드
                 // 업로드하는 코드 작성해야함!
 
-
+                writeUser(email,name,pwd);
 
                 // 업로드 후 메인 화면으로 이동
                 Intent intent2 = new Intent(getApplicationContext(), MainUpload.class);
@@ -209,6 +216,12 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
         }
 
     }
+    private void writeUser(String email, String name, String password){
+        UserData userdata = new UserData(email,name,password);
+        DatabaseReference mDatabase= FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("users").push().setValue(userdata);
+    }
+
 
 
 }

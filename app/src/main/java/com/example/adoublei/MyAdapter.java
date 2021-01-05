@@ -52,9 +52,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.RecyclerViewHolder
         */
 
         }
-
-
-
       /* @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             MenuItem Delete = menu.add(Menu.NONE,1001,1,"삭제");

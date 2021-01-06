@@ -4,9 +4,12 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,6 +29,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -37,7 +43,9 @@ public class DetailActivity extends AppCompatActivity {
     private ImageButton btn_back;
   //  private TextView showName;
     private String str;
-    private String temp;
+    boolean boolean_permission;
+    boolean boolean_save;
+    Bitmap bitmap_object;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +57,7 @@ public class DetailActivity extends AppCompatActivity {
         btn_download = findViewById(R.id.btn_img_download);
         btn_back = findViewById(R.id.btn_back);
 
-
+        ActivityCompat.requestPermissions(DetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
 
         final Intent intent = getIntent();
 
@@ -84,17 +92,23 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(DetailActivity.this);
-                dialog.setTitle("DownLoad");
+                dialog.setTitle("Download");
                 dialog.setItems(listArray,new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(listArray[which]=="PNG"){
                             saveToGallery();
                             Toast.makeText(DetailActivity.this, "갤러리에 저장되었습니다.", Toast.LENGTH_LONG);
-                        }else{
+                        }if(listArray[which]=="PDF"){
                             //pdf
+                            createPdf();
+                            Toast.makeText(DetailActivity.this, "pdf파일이 저장되었습니다.", Toast.LENGTH_LONG);
+                        }else{
+                            Toast.makeText(DetailActivity.this,"잘못된 요청입니다.",Toast.LENGTH_LONG);
                         }
+
                     }
+
                 }).create().show();
             }
         });
@@ -203,5 +217,57 @@ public class DetailActivity extends AppCompatActivity {
         catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    //pdf변환
+    private void createPdf(){
+
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) detailPhoto.getDrawable();
+        Bitmap bitmap = bitmapDrawable.getBitmap();
+
+
+//        Resources mResources = getResources();
+//        Bitmap bitmap = BitmapFactory.decodeResource(mResources, R.drawable.screenshot);
+
+        PdfDocument document = new PdfDocument();
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(bitmap.getWidth(),bitmap.getHeight(), 1).create();
+        PdfDocument.Page page = document.startPage(pageInfo);
+
+        Paint paint = new Paint();
+
+
+
+    //    bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
+
+        page.getCanvas().drawBitmap(bitmap, 0, 0 , null);
+        document.finishPage(page);
+        String date = dateName(System.currentTimeMillis());
+
+        // write the document content
+        //pdf저장시 파일명은 저장하는 시간으로 설정
+        String filePath = Environment.getExternalStorageDirectory().getPath()+"/sdcard/"+date+".pdf";
+        File file = new File(filePath);
+
+     /*   String targetPdf = "/sdcard/image.pdf";
+        File filePath = new File(targetPdf);
+
+      */
+        try {
+            document.writeTo(new FileOutputStream(file));
+          //  btn_convert.setText("Check PDF");
+            boolean_save=true;
+         //   Toast.makeText(this, "다운로드 완료 ",Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Something wrong: " + e.toString(), Toast.LENGTH_LONG).show();
+        }
+
+        // close the document
+        document.close();
+    }
+    private String dateName(long dateTaken){
+        Date date = new Date(dateTaken);
+        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
+        return dateFormat.format(date);
     }
 }

@@ -23,6 +23,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -60,6 +62,7 @@ public class MainUpload extends AppCompatActivity {
     private static final String charsetName = "UTF-8";
   //  private String useruuid = null;
     private  String useruuid = "name";
+    private String uid;
 
 
     private byte[] seed = useruuid.getBytes();
@@ -196,7 +199,7 @@ public class MainUpload extends AppCompatActivity {
 
             filePath = data.getData();
 
-            ItemObject item = new ItemObject("주민등록증증",filePath);
+            ItemObject item = new ItemObject("주민등록증",filePath);
 
             mItem.add(item);
             myAdapter.notifyDataSetChanged();
@@ -220,26 +223,30 @@ public class MainUpload extends AppCompatActivity {
                 Log.e("Encrypt", EncryptString);
 
                 // 암호화된 이미지 업로드
-                DatabaseReference mRootRef= FirebaseDatabase.getInstance().getReference();
-                mRootRef.child(name);
-                mRootRef.child("Encrypt").push().setValue(EncryptString);
 
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                if (user != null) {
+                    // User is signed in
+                    uid = user.getUid();
+                } else {
+                    // No user is signed in
+                }
                 // 복호화
                 DecryptImg = aesCoderAndriod.decrypt(seed, EncryptImg);
                 //stringToBitmap = StringToBitmap(DecryptImg);
                 Bitmap_image = byteArrayToBitmap(DecryptImg);
                 imageView.setImageBitmap(Bitmap_image);
 
-
                 String DecryptString = BitmapToString(Bitmap_image);
                 Log.e("Decrypt", DecryptString);
 
-
-
+                // 암호화된 이미지 업로드
+                DatabaseReference mRootRef= FirebaseDatabase.getInstance().getReference();
+                mRootRef.child("users").child(uid).child("Encrypt").push().setValue(EncryptString);
                 // 복호화된 이미지 업로드
                 DatabaseReference mRootRef2= FirebaseDatabase.getInstance().getReference();
-                mRootRef2.child(name);
-                mRootRef2.child("Decrypt").push().setValue(DecryptString);
+                mRootRef2.child("users").child(uid).child("Decrypt").push().setValue(DecryptString);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -323,156 +330,3 @@ public class MainUpload extends AppCompatActivity {
 
 }
 
-     /*       try {
-
-                // Uri파일로 bitmap resize
-                //resize(getApplicationContext(), filePath, 1000);
-
-                Bitmap ImgBitmap = null;
-
-                //ImgBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                ImgBitmap = resize(getApplicationContext(), filePath, 1000);
-
-                bitmapToString = BitmapToString(ImgBitmap);
-                ImgBitmap.recycle();
-
-                // 키 설정
-
-                //       Glide.with(this).load(filePath).into(imageView2);
-
-
-                final String secretKey = "love";
-                String originalString = bitmapToString;
-
-                // 이미지 암호화
-                EncryptImg = Cryptor.encrypt(originalString, secretKey);
-                Log.e("암호화된이미지", EncryptImg);
-
-                // 암호화된 이미지 업로드
-
-                DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-                //  DatabaseReference conditionRef = mRootRef.child(name).child("암호화된 이미지").push();
-                //   conditionRef.setValue(EncryptImg);
-                mRootRef.child("users").child(name).child("암호화된 이미지").push().setValue(EncryptImg);
-
-
-
-                // 복호화
-                DecryptImg = Cryptor.decrypt(EncryptImg, secretKey);
-                stringToBitmap = StringToBitmap(DecryptImg);
-                imageView.setImageBitmap(stringToBitmap);
-
-                Log.e("복호화된이미지", DecryptImg);
-
-
-                // 복호화된 이미지 업로드
-                DatabaseReference mRootRef2 = FirebaseDatabase.getInstance().getReference();
-                mRootRef2.child("users").child(name).child("복호화된 이미지").push().setValue(DecryptImg);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
-
-
-
-
- /*   private void startToast(String msg){
-        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
-    }
-
-    public static Bitmap StringToBitmap(String encodedString) {
-        try {
-            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch (Exception e) {
-            e.getMessage();
-            return null;
-        }
-    }
-
-
-
-
-    //*    Bitmap을 String형으로 변환
-
-    public static String BitmapToString(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 15, baos);
-        byte[] bytes = baos.toByteArray();
-        String temp = Base64.encodeToString(bytes, Base64.DEFAULT);
-        return temp;
-    }
-
-
-    //* Bitmap을 byte배열로 변환
-
-    public static byte[] BitmapToByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-        return baos.toByteArray();
-    }
-
-    /**
-     * String 객체를 압축하여 String 으로 리턴한다. * @param string * @return
-     */
- /*   public synchronized static String compressString(String string) {
-        return byteToString(compress(string));
-    }
-
-    /**
-     * 압축된 스트링을 복귀시켜서 String 으로 리턴한다. * @param compressed * @return
-     */
- /*   public synchronized static String decompressString(String compressed) {
-        return decompress(hexToByteArray(compressed));
-    }
-
-
-    private static String byteToString(byte[] bytes) {
-        StringBuilder sb = new StringBuilder();
-        try {
-            for (byte b : bytes) {
-                sb.append(String.format("%02X", b));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return sb.toString();
-    }
-
-    private static byte[] compress(String text) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
-            OutputStream out = new DeflaterOutputStream(baos);
-            out.write(text.getBytes(charsetName));
-            out.close();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return baos.toByteArray();
-    }
-
-    private static String decompress(byte[] bytes) {
-        InputStream in = new InflaterInputStream(new ByteArrayInputStream(bytes));
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
-            byte[] buffer = new byte[8192];
-            int len;
-            while ((len = in.read(buffer)) > 0) baos.write(buffer, 0, len);
-            return new String(baos.toByteArray(), charsetName);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new AssertionError(e);
-        }
-    }
-
-    /**
-     * 16진 문자열을 byte 배열로 변환한다.
-     */

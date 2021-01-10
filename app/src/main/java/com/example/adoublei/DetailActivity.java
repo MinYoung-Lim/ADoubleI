@@ -43,9 +43,9 @@ public class DetailActivity extends AppCompatActivity {
     private ImageButton btn_back;
   //  private TextView showName;
     private String str;
-    boolean boolean_permission;
+ //   boolean boolean_permission;
     boolean boolean_save;
-    Bitmap bitmap_object;
+ //   Bitmap bitmap_object;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,9 +80,7 @@ public class DetailActivity extends AppCompatActivity {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DetailActivity.this,MainUpload.class);
-                intent.putExtra("title", str);
-                startActivity(intent);
+                finish();
             }
         });
 
@@ -133,6 +131,12 @@ public class DetailActivity extends AppCompatActivity {
         });
 
     } // end onCreate()
+
+    @Override
+    public void onBackPressed()  // 뒤로가기 방지
+    {
+        //super.onBackPressed();
+    }
 
     private void startToast(String msg){
         Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();

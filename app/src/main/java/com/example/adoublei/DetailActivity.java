@@ -86,7 +86,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        final String[] listArray = {"PNG","PDF"};
+        final String[] listArray = {"PNG","PDF","마스킹"};
         final int[] selectedIndex = {0};
         btn_download.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +103,10 @@ public class DetailActivity extends AppCompatActivity {
                             //pdf
                             createPdf();
                             Toast.makeText(DetailActivity.this, "pdf파일이 저장되었습니다.", Toast.LENGTH_LONG);
-                        }else{
+                        }if(listArray[which]=="마스킹"){
+                            //마스킹
+                            masking();
+                        } else{
                             Toast.makeText(DetailActivity.this,"잘못된 요청입니다.",Toast.LENGTH_LONG);
                         }
 
@@ -186,6 +189,29 @@ public class DetailActivity extends AppCompatActivity {
         }
         return resizeBitmap;
 
+    }
+
+    private  void masking(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("개인정보 마스킹");
+        builder.setMessage("개인정보가 담긴 부분에 마스킹을 처리하겠습니까?");
+        builder.setPositiveButton("자동 선택",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(DetailActivity.this, MaskingAutoActivity.class);
+                        intent.putExtra("image", Byte_image);
+                        startActivity(intent);
+                    }
+                });
+        builder.setNegativeButton("수동 선택",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(DetailActivity.this, MaskingActivity.class);
+                        intent.putExtra("image", Byte_image);
+                        startActivity(intent);
+                    }
+                });
+        builder.show();
     }
 
     private void saveToGallery(){

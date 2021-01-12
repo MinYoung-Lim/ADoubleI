@@ -13,13 +13,15 @@ public class InputEmailRealActivity extends AppCompatActivity {
 
     ImageView iv_next;
 
-
-
+//파이어베이스 AUTH 선언
+//    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_email2);
+        // Initialize Firebase Auth 초기화
+//        mAuth = FirebaseAuth.getInstance();
 
         iv_next = findViewById(R.id.iv_next);
 
@@ -31,15 +33,21 @@ public class InputEmailRealActivity extends AppCompatActivity {
             }
         });
 
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-
-        //updateUI(currentUser);
 
     }
+
+
+    /*  @Override
+      public void onStart() {
+          super.onStart();
+          // Check if user is signed in (non-null) and update UI accordingly.
+          FirebaseUser currentUser = mAuth.getCurrentUser();
+          //updateUI(currentUser);
+
+
+
+      }
+  */
     private void inputEmail(){
         String email = ((EditText)findViewById(R.id.et_email)).getText().toString();
 

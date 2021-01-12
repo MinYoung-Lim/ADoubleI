@@ -8,12 +8,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class ReInputPwdRealActivity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
 
     // 2020.12.26 임민영
     // InputPwdRealActivity와 대부분 코드가 같고 추가적으로 해당 액티비티에서 받아온 비밀번호와 비교하는 기능 구현함
@@ -31,6 +39,8 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_re_input_pwd_real);
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
 
         tv_1 = findViewById(R.id.tv_1);
         tv_2 = findViewById(R.id.tv_2);
@@ -81,6 +91,14 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        // updateUI(currentUser);
+
+    }
     @Override
     public void onBackPressed()  // 뒤로가기 방지
     {
@@ -161,9 +179,26 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
             if(pwd.equals(pwd2.toString())){  // 비밀번호가 같으면 Firebase에 업로드
                 // 업로드하는 코드 작성해야함!
 
-                writeUser(email,name,pwd);
+                mAuth.createUserWithEmailAndPassword(email, pwd)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    //updateUI(user);
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Toast.makeText(ReInputPwdRealActivity.this, "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                    //     updateUI(null);
+                                }
 
-                // 업로드 후 메인 화면으로 이동
+                            }
+                        });
+
+                writeUser(email,name,pwd);
+                // 사용자 정보 업로드 후 메인 화면으로 이동
                 Intent intent2 = new Intent(getApplicationContext(), MainUpload.class);
                 startActivity(intent2);
             }
@@ -217,9 +252,11 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
 
     }
     private void writeUser(String email, String name, String password){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userID = user.getUid();
         UserData userdata = new UserData(email,name,password);
         DatabaseReference mDatabase= FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("users").push().setValue(userdata);
+        mDatabase.child("users").child(userID).push().setValue(userdata);
     }
 
 

@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
 public class InputNameRealActivity extends AppCompatActivity {
 
     ImageView iv_next, iv_back;
@@ -17,6 +18,8 @@ public class InputNameRealActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_name_real);
+        // Initialize Firebase Auth
+        //  mAuth = FirebaseAuth.getInstance();
 
         iv_next = findViewById(R.id.iv_next);
         iv_back = findViewById(R.id.iv_back);
@@ -36,6 +39,8 @@ public class InputNameRealActivity extends AppCompatActivity {
         });
 
     }
+
+
 
     @Override
     public void onBackPressed()  // 뒤로가기 방지

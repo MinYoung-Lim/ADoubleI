@@ -62,8 +62,7 @@ public class MainUpload extends AppCompatActivity {
     private static final String charsetName = "UTF-8";
   //  private String useruuid = null;
     private  String useruuid = "name";
-    private String uid;
-
+    static public String userID;
 
     private byte[] seed = useruuid.getBytes();
     private byte[] Byte_image;
@@ -132,6 +131,7 @@ public class MainUpload extends AppCompatActivity {
 
             }
         });
+
 
 
     }
@@ -223,15 +223,16 @@ public class MainUpload extends AppCompatActivity {
                 Log.e("Encrypt", EncryptString);
 
                 // 암호화된 이미지 업로드
-
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                 if (user != null) {
                     // User is signed in
-                    uid = user.getUid();
+                    userID = user.getUid();
                 } else {
                     // No user is signed in
                 }
+
+
                 // 복호화
                 DecryptImg = aesCoderAndriod.decrypt(seed, EncryptImg);
                 //stringToBitmap = StringToBitmap(DecryptImg);
@@ -243,10 +244,10 @@ public class MainUpload extends AppCompatActivity {
 
                 // 암호화된 이미지 업로드
                 DatabaseReference mRootRef= FirebaseDatabase.getInstance().getReference();
-                mRootRef.child("users").child(uid).child("Encrypt").push().setValue(EncryptString);
+                mRootRef.child("users").child(userID).child("Encrypt").push().setValue(EncryptString);
                 // 복호화된 이미지 업로드
                 DatabaseReference mRootRef2= FirebaseDatabase.getInstance().getReference();
-                mRootRef2.child("users").child(uid).child("Decrypt").push().setValue(DecryptString);
+                mRootRef2.child("users").child(userID).child("Decrypt").push().setValue(DecryptString);
 
             } catch (Exception e) {
                 e.printStackTrace();

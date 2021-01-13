@@ -77,7 +77,7 @@ public class InputPassword extends AppCompatActivity {
             intent2.putExtra("name", name);
             intent2.putExtra("password", password);
 
-            writeUser(email,name,password);
+          //  writeUser(email,name,password,u);
 
             startActivity(intent2);
 
@@ -99,9 +99,9 @@ public class InputPassword extends AppCompatActivity {
         Intent intent = new Intent(this,ReinputPassword.class);
         startActivity(intent);
     }
-    private void writeUser(String email, String name, String password){
+    private void writeUser(String email, String name, String password,String uid){
         DatabaseReference mDatabase= FirebaseDatabase.getInstance().getReference();
-        UserData userdata = new UserData(email,name, password);
+        UserData userdata = new UserData(email,name, password,uid);
         mDatabase.child("users").child(name).push().setValue(userdata);
     }
 

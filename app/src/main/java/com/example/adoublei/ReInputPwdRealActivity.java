@@ -34,6 +34,9 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
     String pwd;
     String email;
     String name;
+    String userID;
+   // FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+  //  String userID = currentUser.getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,29 +181,34 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
 
             if(pwd.equals(pwd2.toString())){  // 비밀번호가 같으면 Firebase에 업로드
                 // 업로드하는 코드 작성해야함!
-
                 mAuth.createUserWithEmailAndPassword(email, pwd)
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
-                                    FirebaseUser user = mAuth.getCurrentUser();
                                     //updateUI(user);
+
+
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Toast.makeText(ReInputPwdRealActivity.this, "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();
                                     //     updateUI(null);
                                 }
+                                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                                userID = currentUser.getUid();
+                                writeUser(email,name,pwd,userID);
+
+                                // 사용자 정보 업로드 후 메인 화면으로 이동
+                                Intent intent2 = new Intent(getApplicationContext(), MainUpload.class);
+                                startActivity(intent2);
 
                             }
+
+
                         });
 
-                writeUser(email,name,pwd);
-                // 사용자 정보 업로드 후 메인 화면으로 이동
-                Intent intent2 = new Intent(getApplicationContext(), MainUpload.class);
-                startActivity(intent2);
             }
             else{  // 비밀번호 다르면
 
@@ -209,6 +217,7 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
             }
 
         }
+
     }
 
 
@@ -251,12 +260,11 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
         }
 
     }
-    private void writeUser(String email, String name, String password){
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String userID = user.getUid();
-        UserData userdata = new UserData(email,name,password);
+    private void writeUser(String email, String name, String password,String uid){
+
+        UserData userdata = new UserData(email,name,password,uid);
         DatabaseReference mDatabase= FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("users").child(userID).push().setValue(userdata);
+        mDatabase.child("users").child(uid).push().setValue(userdata);
     }
 
 

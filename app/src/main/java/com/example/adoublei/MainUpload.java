@@ -224,13 +224,8 @@ public class MainUpload extends AppCompatActivity {
 
                 // 암호화된 이미지 업로드
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                if (user != null) {
                     // User is signed in
                     userID = user.getUid();
-                } else {
-                    // No user is signed in
-                }
 
 
                 // 복호화

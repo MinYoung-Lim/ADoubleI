@@ -62,7 +62,7 @@ public class MainUpload extends AppCompatActivity {
     private static final String charsetName = "UTF-8";
   //  private String useruuid = null;
     private  String useruuid = "name";
-    static public String userID;
+
 
     private byte[] seed = useruuid.getBytes();
     private byte[] Byte_image;
@@ -189,11 +189,6 @@ public class MainUpload extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
-
-
-
         //request코드가 0이고 OK를 선택했고 data에 뭔가가 들어 있다면
         if (requestCode == 0 && resultCode == RESULT_OK) {
 
@@ -203,7 +198,6 @@ public class MainUpload extends AppCompatActivity {
 
             mItem.add(item);
             myAdapter.notifyDataSetChanged();
-
 
             Bitmap ImgBitmap = null;
 
@@ -222,27 +216,32 @@ public class MainUpload extends AppCompatActivity {
                 String EncryptString = EncryptImg.toString();
                 Log.e("Encrypt", EncryptString);
 
-                // 암호화된 이미지 업로드
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    // User is signed in
-                    userID = user.getUid();
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                Log.e("userid", currentUser.getUid());
 
 
                 // 복호화
                 DecryptImg = aesCoderAndriod.decrypt(seed, EncryptImg);
                 //stringToBitmap = StringToBitmap(DecryptImg);
-                Bitmap_image = byteArrayToBitmap(DecryptImg);
-                imageView.setImageBitmap(Bitmap_image);
-
-                String DecryptString = BitmapToString(Bitmap_image);
+               // Bitmap_image = byteArrayToBitmap(DecryptImg);
+              //  imageView.setImageBitmap(Bitmap_image);
+                String DecryptString = DecryptImg.toString();
                 Log.e("Decrypt", DecryptString);
-
                 // 암호화된 이미지 업로드
+
                 DatabaseReference mRootRef= FirebaseDatabase.getInstance().getReference();
-                mRootRef.child("users").child(userID).child("Encrypt").push().setValue(EncryptString);
+                mRootRef.child("users").child(currentUser.getUid()).child("Encrypt").push().setValue(EncryptString);
+
+              //  mRootRef.child("users").child(currentUser.getUid()).child("Encrypt").push().setValue(EncryptString);
+                mRootRef.child("users").child(currentUser.getUid()).child("Decrypt").push().setValue(DecryptString);
+
+
                 // 복호화된 이미지 업로드
-                DatabaseReference mRootRef2= FirebaseDatabase.getInstance().getReference();
-                mRootRef2.child("users").child(userID).child("Decrypt").push().setValue(DecryptString);
+
+            //    DatabaseReference mRootRef2= FirebaseDatabase.getInstance().getReference();
+               // mRootRef2.child("users").child(currentUser.getUid()).child("Decrypt").push().setValue(DecryptString);
+
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -250,6 +249,16 @@ public class MainUpload extends AppCompatActivity {
         }
 
 
+    }
+    public static Bitmap StringToBitmap(String encodedString) {
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
     }
 
     //Bitmap을 String형으로 변환
@@ -322,6 +331,7 @@ public class MainUpload extends AppCompatActivity {
                 return false;
         }
     }
+
 
 
 }

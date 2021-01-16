@@ -16,15 +16,21 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -32,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainUpload extends AppCompatActivity {
 
@@ -89,6 +96,8 @@ public class MainUpload extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mGridLayoutManager);
 
         mItem = new ArrayList<>();
+
+   //     loadPhoto();
 
         myAdapter = new MyAdapter(mItem);
         mRecyclerView.setAdapter(myAdapter);
@@ -195,6 +204,7 @@ public class MainUpload extends AppCompatActivity {
             filePath = data.getData();
 
             ItemObject item = new ItemObject("주민등록증",filePath);
+            String image_title = item.getTitle();
 
             mItem.add(item);
             myAdapter.notifyDataSetChanged();
@@ -209,7 +219,7 @@ public class MainUpload extends AppCompatActivity {
 
             try {
                 // Uri파일로 bitmap resize
-                //resize(getApplicationContext(), filePath, 1000);
+                resize(getApplicationContext(), filePath, 1000);
 
                 // 이미지 암호화
                 EncryptImg = aesCoderAndriod.encrypt(seed, Byte_image);
@@ -230,11 +240,35 @@ public class MainUpload extends AppCompatActivity {
                 Log.e("Decrypt", DecryptString);
                 // 암호화된 이미지 업로드
 
-                DatabaseReference mRootRef= FirebaseDatabase.getInstance().getReference();
-                mRootRef.child("users").child(currentUser.getUid()).child("Encrypt").push().setValue(EncryptString);
+
+           //     mRootRef.child("users").child(currentUser.getUid()).child("Encrypt").push().setValue(EncryptString);
 
               //  mRootRef.child("users").child(currentUser.getUid()).child("Encrypt").push().setValue(EncryptString);
-                mRootRef.child("users").child(currentUser.getUid()).child("Decrypt").push().setValue(DecryptString);
+             //   mRootRef.child("users").child(currentUser.getUid()).child("Decrypt").push().setValue(DecryptString);
+
+
+
+
+                    DatabaseReference mRootRef= FirebaseDatabase.getInstance().getReference("users")
+                            .child(currentUser.getUid()).child("Object");
+                    HashMap<Object,String> object = new HashMap<Object, String>();
+
+                    object.put("title",image_title);
+                    object.put("photo",EncryptString);
+                    mRootRef.push().setValue(object)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
+
 
 
                 // 복호화된 이미지 업로드
@@ -330,6 +364,29 @@ public class MainUpload extends AppCompatActivity {
             default:
                 return false;
         }
+    }
+    private void loadPhoto(){
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
+                .child(currentUser.getUid()).child("Object");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mItem.clear();
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                    ItemObject itemObject = dataSnapshot.getValue(ItemObject.class);   //여기서 에러
+                    mItem.add(itemObject);
+                }
+                myAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 

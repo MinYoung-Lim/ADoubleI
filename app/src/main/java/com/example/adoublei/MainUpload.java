@@ -365,6 +365,7 @@ public class MainUpload extends AppCompatActivity {
                 return false;
         }
     }
+
     private void loadPhoto(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")

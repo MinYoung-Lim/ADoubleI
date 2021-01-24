@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/detailbg"
-    tools:context=".MaskingAutoActivity">
+    tools:context=".masking.MaskingAutoActivity">
 
     <ImageView
         android:id="@+id/imageMasking"

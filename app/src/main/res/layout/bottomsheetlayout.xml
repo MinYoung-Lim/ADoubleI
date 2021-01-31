@@ -4,60 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <!--
-    <ScrollView
+
+   <ScrollView
         android:layout_width="match_parent"
         android:layout_height="175dp"
         android:layout_above="@+id/upload"
         android:layout_weight="7"
         android:maxHeight="400dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/maskingOption"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_weight="9">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-
-    </ScrollView>-->
-
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/maskingOption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Bottom Sheet"
-        android:textColor="@android:color/black"
-        android:textSize="24sp" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="9">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="- 하단에 필요한 정보를 넣을수 있습니다."
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
+    </androidx.recyclerview.widget.RecyclerView>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="- 정말 활용도가 높은 기능이죠? 모두 즐겁게 개발해요."
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
 
-    <Button
-        android:id="@+id/button_bottom_sheet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#1c9d9e"
-        android:text="좋아요!"
-        android:textColor="@android:color/white"
-        android:textStyle="bold" />
-
+   </ScrollView>
 </LinearLayout>

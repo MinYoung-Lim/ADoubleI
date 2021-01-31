@@ -21,7 +21,7 @@ public class MaskingAdapter extends RecyclerView.Adapter<MaskingAdapter.Recycler
     private ArrayList<MaskingItem> mItem;
 
     public MaskingAdapter(ArrayList<MaskingItem> item){
-        this.context = context;
+        //this.context = context;
         this.mItem = item;
     }
 

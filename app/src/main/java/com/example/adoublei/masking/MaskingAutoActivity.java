@@ -15,11 +15,13 @@ import com.example.adoublei.R;
 
 import java.util.ArrayList;
 
-public class MaskingAutoActivity extends AppCompatActivity {
+public class MaskingAutoActivity extends AppCompatActivity implements BottomSheetDialog.BottomSheetListener {
 
     private ImageView beforeMasking;
     private ArrayList<MaskingItem> mItem = new ArrayList<>();
-    MaskingAdapter maskingAdapter =null;
+    private Bitmap image;
+    private Bitmap afterMasking;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,20 +29,12 @@ public class MaskingAutoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_masking_auto);
 
         byte[] arr = getIntent().getByteArrayExtra("image");
-        Bitmap image = BitmapFactory.decodeByteArray(arr, 0, arr.length);
+        image = BitmapFactory.decodeByteArray(arr, 0, arr.length);
         beforeMasking = (ImageView)findViewById(R.id.imageMasking);
-        //beforeMasking.setImageBitmap(image);
+        beforeMasking.setImageBitmap(image);
+        afterMasking = Bitmap.createBitmap(image).copy(Bitmap.Config.ARGB_8888,true);
 
-        Bitmap newImage = Bitmap.createBitmap(image).copy(Bitmap.Config.ARGB_8888,true);
-        Canvas canvas = new Canvas(newImage);
 
-        canvas.drawLine(0,0,200,0,new Paint());
-        canvas.drawLine(200,0,200,200,new Paint());
-        canvas.drawLine(200,200,0,200,new Paint());
-        canvas.drawLine(0,200,0,0,new Paint());
-        canvas.drawCircle(100,100,50,new Paint());
-
-        beforeMasking.setImageBitmap(newImage);
 
 
         Button buttonOpenBottomSheet = findViewById(R.id.buttonOpenBottomSheet);
@@ -53,5 +47,18 @@ public class MaskingAutoActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    public void onSwitchChecked(boolean checked) {
+        if (checked == true) {
+            Canvas canvas = new Canvas(afterMasking);
+
+            canvas.drawRect(100, 100, 200, 200, new Paint());
+
+            beforeMasking.setImageBitmap(afterMasking);
+        } else{
+            beforeMasking.setImageBitmap(image);
+        }
     }
 }

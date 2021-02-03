@@ -375,7 +375,6 @@ public class MainUpload extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 mItem.clear();
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-
                     ItemObject itemObject = dataSnapshot.getValue(ItemObject.class);   //여기서 에러
                     mItem.add(itemObject);
                 }

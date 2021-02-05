@@ -35,7 +35,7 @@ import static com.example.adoublei.FileUploadUtils.result8;
 import static com.example.adoublei.FileUploadUtils.NumOfClass;
 
 
-public class MaskingAutoActivity extends AppCompatActivity implements BottomSheetDialog.BottomSheetListener {
+public abstract class MaskingAutoActivity extends AppCompatActivity implements BottomSheetDialog.BottomSheetListener {
 
     private ImageView beforeMasking;
     private ArrayList<MaskingItem> mItem = new ArrayList<>();

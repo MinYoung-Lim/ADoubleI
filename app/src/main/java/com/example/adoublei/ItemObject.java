@@ -5,7 +5,7 @@ import android.net.Uri;
 public class ItemObject {
 
         private String title;
-        private Uri Photo;
+        private String Photo;
 
         public String getTitle() {
             return title;
@@ -15,18 +15,20 @@ public class ItemObject {
             this.title = title;
         }
 
-        public Uri getPhoto() {
+        public String getPhoto() {
             return Photo;
         }
 
-        public void setPhoto(Uri photo){
-            Photo=photo;
+        public void setPhoto(String photo){
+
+            this.Photo=photo;
         }
 
-        public ItemObject(String title, Uri photo) {
+        public ItemObject(String title, String photo) {
         this.title = title;
-        Photo=photo;
+        this.Photo=photo;
         }
+        public ItemObject() {}
 
     }
 

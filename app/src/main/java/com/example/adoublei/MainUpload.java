@@ -1,11 +1,13 @@
 package com.example.adoublei;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -16,38 +18,45 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static android.graphics.BitmapFactory.decodeByteArray;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class MainUpload extends AppCompatActivity {
 
     RecyclerView mRecyclerView = null;
     MyAdapter myAdapter=null;
-    ArrayList<ItemObject> mItem = new ArrayList<ItemObject>();
+    private ArrayList<ItemObject> mItem =new ArrayList<ItemObject>();
+    AESCoderAndriod aesCoderAndriod = new AESCoderAndriod();
 
-    private String text;
-    public String encryptText2;
+
     private Uri filePath;
     private Button btn_upload;
     private ImageView imageView;
@@ -55,29 +64,19 @@ public class MainUpload extends AppCompatActivity {
     private ImageView mypage;
     private DrawerLayout drawerLayout;
     private boolean isChecked = false;
+    private TextView textView;
+    private Bitmap ImgBitmap;
 
-
-    ValueEventListener mValueEventListener;
-
-    private GridLayoutManager mGridLayoutManager;
-  /*  private String EncryptImg="";
-    private String DecryptImg="";
-    private String bitmapToString="";
-    private Bitmap stringToBitmap;
-
-    */
     private static final String charsetName = "UTF-8";
-  //  private String useruuid = null;
     private  String useruuid = "name";
 
 
     private byte[] seed = useruuid.getBytes();
     private byte[] Byte_image;
     private byte[] EncryptImg;
-    private byte[] DecryptImg;
-    private Bitmap Bitmap_image;
 
-    private View view;
+
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,20 +84,19 @@ public class MainUpload extends AppCompatActivity {
 
         btn_upload = findViewById(R.id.button_main_insert);
         imageView = findViewById(R.id.photo_listitem);
- //     btn_delete = findViewById(R.id.button_delete);
+        textView = findViewById(R.id.title_listitem);
+
         mypage = findViewById(R.id.mypage); //마이페이지 버튼
         drawerLayout = findViewById(R.id.firstlayout); //마이페이지 레이아웃
 
-
         mRecyclerView = findViewById(R.id.recyclerview_main_list);
         int numberOfColumns = 3;
-        GridLayoutManager mGridLayoutManager = new GridLayoutManager(this,numberOfColumns);
+        GridLayoutManager mGridLayoutManager = new GridLayoutManager(getApplication(),numberOfColumns);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
+        mRecyclerView.setHasFixedSize(true);
 
         mItem = new ArrayList<>();
-
-   //     loadPhoto();
-
+        loadPhoto();
         myAdapter = new MyAdapter(mItem);
         mRecyclerView.setAdapter(myAdapter);
 
@@ -110,6 +108,7 @@ public class MainUpload extends AppCompatActivity {
             public void onClick(View view, int position) {
 
                 ItemObject itemObject = mItem.get(position);
+
                 Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
                 intent.putExtra("title",itemObject.getTitle());
                 intent.putExtra("photo",itemObject.getPhoto());
@@ -118,8 +117,12 @@ public class MainUpload extends AppCompatActivity {
 
             @Override
             public void onLongClick(View view, int position) {
+                //String currentTitle = mItem.get(position).getTitle();
+               // String currentPhoto = mItem.get(position).getPhoto();
+              //  showDeleteDataDialog(currentTitle,currentPhoto);
             }
         }));
+
 
         mypage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,11 +147,56 @@ public class MainUpload extends AppCompatActivity {
 
 
     }
+   /* private void showDeleteDataDialog(final String currentTitle, final String currentPhoto){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainUpload.this);
+        builder.setTitle("Delete");
+        builder.setMessage("정말로 삭제하시겠습니까?");
+        builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                    //"yes" -> delete
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
+                        .child(currentUser.getUid()).child("Object");
+
+                Query mQuery = databaseReference.orderByChild("title").equalTo(currentPhoto);
+                mQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot ds: snapshot.getChildren()){
+                            ds.getRef().removeValue();
+                        }
+                        Toast.makeText(MainUpload.this,"삭제되었습니다.",Toast.LENGTH_SHORT);
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(MainUpload.this,error.getMessage(),Toast.LENGTH_SHORT);
+                    }
+                });
+
+            }
+        });
+        builder.setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                    //"no" -> just dismiss dialog
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+
+    }
+
+    */
     public interface ClickListener {
         void onClick(View view, int position);
 
         void onLongClick(View view, int position);
     }
+
+
 
     public static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
 
@@ -171,7 +219,11 @@ public class MainUpload extends AppCompatActivity {
                     }
                 }
             });
+
         }
+
+
+
 
         @Override
         public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
@@ -189,6 +241,7 @@ public class MainUpload extends AppCompatActivity {
         @Override
         public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
         }
+
     }
 
 
@@ -203,97 +256,125 @@ public class MainUpload extends AppCompatActivity {
 
             filePath = data.getData();
 
-            ItemObject item = new ItemObject("주민등록증",filePath);
-            String image_title = item.getTitle();
-
-            mItem.add(item);
-            myAdapter.notifyDataSetChanged();
-
-            Bitmap ImgBitmap = null;
-
             //ImgBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+
             ImgBitmap = resize(getApplicationContext(), filePath, 300);
 
             Byte_image = BitmapToByteArray(ImgBitmap);
-            AESCoderAndriod aesCoderAndriod = new AESCoderAndriod();
+
 
             try {
                 // Uri파일로 bitmap resize
-                resize(getApplicationContext(), filePath, 1000);
+                //resize(getApplicationContext(), filePath, 1000);
 
                 // 이미지 암호화
                 EncryptImg = aesCoderAndriod.encrypt(seed, Byte_image);
-                String EncryptString = EncryptImg.toString();
-                Log.e("Encrypt", EncryptString);
+                //EncryptImg = Base64.encodeToString(Byte_image,0);
+                //String EncryptString = EncryptImg.toString();
+                String EncrypString = Base64.encodeToString(EncryptImg,0);
 
+               // Log.e("Encrypt", EncrypString);
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-                Log.e("userid", currentUser.getUid());
-
-
-                // 복호화
-                DecryptImg = aesCoderAndriod.decrypt(seed, EncryptImg);
-                //stringToBitmap = StringToBitmap(DecryptImg);
-               // Bitmap_image = byteArrayToBitmap(DecryptImg);
-              //  imageView.setImageBitmap(Bitmap_image);
-                String DecryptString = DecryptImg.toString();
-                Log.e("Decrypt", DecryptString);
-                // 암호화된 이미지 업로드
-
-
-           //     mRootRef.child("users").child(currentUser.getUid()).child("Encrypt").push().setValue(EncryptString);
-
-              //  mRootRef.child("users").child(currentUser.getUid()).child("Encrypt").push().setValue(EncryptString);
-             //   mRootRef.child("users").child(currentUser.getUid()).child("Decrypt").push().setValue(DecryptString);
-
-
-
-
-                    DatabaseReference mRootRef= FirebaseDatabase.getInstance().getReference("users")
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
                             .child(currentUser.getUid()).child("Object");
+                String key = databaseReference.push().getKey();
                     HashMap<Object,String> object = new HashMap<Object, String>();
 
-                    object.put("title",image_title);
-                    object.put("photo",EncryptString);
-                    mRootRef.push().setValue(object)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
+                    object.put("title","image_title");
+                    object.put("photo",EncrypString);
 
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-
-                                }
-                            });
-
-
-
-                // 복호화된 이미지 업로드
-
-            //    DatabaseReference mRootRef2= FirebaseDatabase.getInstance().getReference();
-               // mRootRef2.child("users").child(currentUser.getUid()).child("Decrypt").push().setValue(DecryptString);
-
+                    DatabaseReference keyRef = databaseReference.child(key);
+                    keyRef.setValue(object);
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
         }
 
 
     }
+    public void loadPhoto() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
+                .child(currentUser.getUid()).child("Object");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mItem.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                    ItemObject itemObject = snapshot.getValue(ItemObject.class);
+                    String title = itemObject.getTitle();
+                    String En1 = itemObject.getPhoto();
+                    Log.e("En1", En1);
+                    // byte[] En2 = En1.getBytes();
+                    // Log.e("En2", En2.toString());
+                    byte[] Dn1 = (Base64.decode(En1, 0));
+                    byte[] Dn2 = new byte[0];
+                    try {
+                        Dn2 = aesCoderAndriod.decrypt(seed, Dn1);
+                        //Log.e("Dn2", String.valueOf(Dn2));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    Bitmap Dn3 = byteArrayToBitmap(Dn2);
+                    Uri Dn4 = getImageUri(getApplicationContext(), Dn3);
+                    //  Log.e("Dn3", String.valueOf(Dn3));
+                    itemObject = new ItemObject(title, Dn4.toString());
+                    mItem.add(itemObject);
+
+                }
+                myAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+   /*     databaseReference.removeEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                snapshot.getRef().removeValue();
+                ItemObject itemObject = snapshot.getValue(ItemObject.class);
+                String title = itemObject.getTitle();
+                String photo = itemObject.getPhoto();
+                itemObject = new ItemObject(title, photo);
+                mItem.remove(itemObject);
+                myAdapter.notifyDataSetChanged();
+
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    */
+
+    }
+
+    private Uri getImageUri(Context context, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100,bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
     public static Bitmap StringToBitmap(String encodedString) {
         try {
             byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            Bitmap bitmap = decodeByteArray(encodeByte, 0, encodeByte.length);
             return bitmap;
         } catch (Exception e) {
             e.getMessage();
             return null;
         }
     }
+
 
     //Bitmap을 String형으로 변환
     public static String BitmapToString(Bitmap bitmap) {
@@ -307,18 +388,33 @@ public class MainUpload extends AppCompatActivity {
 
     //Bitmap을 byte배열로 변환
     public static byte[] BitmapToByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-        return baos.toByteArray();
+       ByteArrayOutputStream baos = new ByteArrayOutputStream();
+       bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+       return baos.toByteArray();
+
     }
 
     //byte를 Bitmap으로 변환
-    public Bitmap byteArrayToBitmap( byte[] byteArray ) {
-        Bitmap bitmap = BitmapFactory.decodeByteArray( byteArray, 0, byteArray.length ) ;
-        return bitmap ;
+    public static Bitmap byteArrayToBitmap1(byte[] byteArray ) {
+        //바이트 배열
+        Bitmap bitmap;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        int width = options.outWidth;  //이미지의 너비
+        int height = options.outHeight; //이미지의 높이
+        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888); //비트맵을 생성
+        ByteBuffer buffer = ByteBuffer.wrap(byteArray);
+        buffer.rewind();
+        bitmap.copyPixelsFromBuffer(buffer);
+
+        return bitmap;
+    }
+    public static Bitmap byteArrayToBitmap(byte[] byteArray){
+
+        Bitmap bitmap = decodeByteArray(byteArray,0,byteArray.length);
+        return bitmap;
     }
 
-    private Bitmap resize(Context context, Uri uri, int resize) {
+    public static Bitmap resize(Context context, Uri uri, int resize) {
         Bitmap resizeBitmap = null;
 
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -366,30 +462,17 @@ public class MainUpload extends AppCompatActivity {
         }
     }
 
-    private void loadPhoto(){
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
-                .child(currentUser.getUid()).child("Object");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mItem.clear();
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    ItemObject itemObject = dataSnapshot.getValue(ItemObject.class);   //여기서 에러
-                    mItem.add(itemObject);
-                }
+
+    private void clearAll(){
+        if(mItem !=null){
+            mItem.clear();
+            if(myAdapter != null){
                 myAdapter.notifyDataSetChanged();
 
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        }
+        mItem = new ArrayList<>();
     }
-
-
 
 }
 

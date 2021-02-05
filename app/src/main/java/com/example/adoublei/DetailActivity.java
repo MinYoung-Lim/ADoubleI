@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Base64;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -33,6 +34,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -64,13 +66,15 @@ public class DetailActivity extends AppCompatActivity {
 
         final Intent intent = getIntent();
 
-        Uri photo = intent.getParcelableExtra("photo");
+        String photo = intent.getStringExtra("photo");
         final String title = intent.getStringExtra("title");
+
+
 
         Bitmap ImgBitmap = null;
 
         //ImgBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-        ImgBitmap = resize(getApplicationContext(), photo, 1000);
+        ImgBitmap = resize(getApplicationContext(), Uri.parse(photo), 1000);
 
         Byte_image = BitmapToByteArray(ImgBitmap);
 
@@ -99,16 +103,16 @@ public class DetailActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         if(listArray[which]=="PNG"){
                             saveToGallery();
-                            Toast.makeText(DetailActivity.this, "갤러리에 저장되었습니다.", Toast.LENGTH_LONG);
+                            Toast.makeText(getApplicationContext(), "갤러리에 저장되었습니다.", Toast.LENGTH_LONG);
                         }if(listArray[which]=="PDF"){
                             //pdf
                             createPdf();
-                            Toast.makeText(DetailActivity.this, "pdf파일이 저장되었습니다.", Toast.LENGTH_LONG);
+                            Toast.makeText(getApplicationContext(), "pdf파일이 저장되었습니다.", Toast.LENGTH_LONG);
                         }if(listArray[which]=="마스킹"){
                             //마스킹
                             masking();
                         } else{
-                            Toast.makeText(DetailActivity.this,"잘못된 요청입니다.",Toast.LENGTH_LONG);
+                            Toast.makeText(getApplicationContext(),"잘못된 요청입니다.",Toast.LENGTH_LONG);
                         }
 
                     }
@@ -158,7 +162,7 @@ public class DetailActivity extends AppCompatActivity {
     //Bitmap을 byte배열로 변환
     public static byte[] BitmapToByteArray(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 70, baos);
         return baos.toByteArray();
     }
 

@@ -83,6 +83,7 @@ public class MainUpload extends AppCompatActivity {
 
 
 
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -117,6 +118,7 @@ public class MainUpload extends AppCompatActivity {
                 ItemObject itemObject = mItem.get(position);
 
                 Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
+                intent.putExtra("key", itemObject.getKey());
                 intent.putExtra("title",itemObject.getTitle());
                 intent.putExtra("photo",itemObject.getPhoto());
                 startActivity(intent);
@@ -288,11 +290,14 @@ public class MainUpload extends AppCompatActivity {
                 String key = databaseReference.push().getKey();
                     HashMap<Object,String> object = new HashMap<Object, String>();
 
-                    object.put("title","image_title");
-                    object.put("photo",EncrypString);
+                object.put("key", key);
+                object.put("title","IMG_" + System.currentTimeMillis());
+                object.put("photo",EncrypString);
 
-                    DatabaseReference keyRef = databaseReference.child(key);
-                    keyRef.setValue(object);
+                Log.e("올릴때의 key", key);
+
+                DatabaseReference keyRef = databaseReference.child(key);
+                keyRef.setValue(object);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -313,9 +318,13 @@ public class MainUpload extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                     ItemObject itemObject = snapshot.getValue(ItemObject.class);
+                    String key = itemObject.getKey();
                     String title = itemObject.getTitle();
                     String En1 = itemObject.getPhoto();
-                    Log.e("En1", En1);
+
+                    Log.e("받았을때의 key", key);
+
+                   // Log.e("En1", En1);
                     // byte[] En2 = En1.getBytes();
                     // Log.e("En2", En2.toString());
                     byte[] Dn1 = (Base64.decode(En1, 0));
@@ -329,8 +338,8 @@ public class MainUpload extends AppCompatActivity {
                     Bitmap Dn3 = byteArrayToBitmap(Dn2);
                     Uri Dn4 = getImageUri(getApplicationContext(), Dn3);
                     //  Log.e("Dn3", String.valueOf(Dn3));
-                    itemObject = new ItemObject(title, Dn4.toString());
-                    mItem.add(itemObject);
+                    ItemObject itemObject1 = new ItemObject(key, title, Dn4.toString());
+                    mItem.add(itemObject1);
 
                 }
                 myAdapter.notifyDataSetChanged();

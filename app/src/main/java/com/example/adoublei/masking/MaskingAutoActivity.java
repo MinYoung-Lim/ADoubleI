@@ -96,7 +96,7 @@ public abstract class MaskingAutoActivity extends AppCompatActivity implements B
                 // 시간 지난 후 실행할 코딩
                 // 은지야 이부분에 result1~8, NumOfClass 사용하는 코드 작성하면돼!
                 // 다른데서 사용하면 값이 안들어와져있을거야..!
-                
+
 
 
 

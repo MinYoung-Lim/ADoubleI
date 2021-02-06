@@ -13,6 +13,7 @@ import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -22,12 +23,20 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.example.adoublei.masking.MaskingActivity;
 import com.example.adoublei.masking.MaskingAutoActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -37,6 +46,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -51,10 +62,17 @@ public class DetailActivity extends AppCompatActivity {
  //   boolean boolean_permission;
     boolean boolean_save;
  //   Bitmap bitmap_object;
+     private  String useruuid = "name";
+    private byte[] seed = useruuid.getBytes();
+    String key;
+    private DatabaseReference mDatabase;
+
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);  // layout xml 과 자바파일을 연결
+
 
         detailPhoto = findViewById(R.id.detail_image);
         detailName = findViewById(R.id.thename);
@@ -62,12 +80,14 @@ public class DetailActivity extends AppCompatActivity {
         btn_download = findViewById(R.id.btn_img_download);
         btn_back = findViewById(R.id.btn_back);
 
+
         ActivityCompat.requestPermissions(DetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
 
         final Intent intent = getIntent();
 
-        String photo = intent.getStringExtra("photo");
-        final String title = intent.getStringExtra("title");
+        final String photo = intent.getStringExtra("photo");
+        final String originalTitle = intent.getStringExtra("title");
+        final String key = intent.getStringExtra("key");
 
 
 
@@ -79,7 +99,7 @@ public class DetailActivity extends AppCompatActivity {
         Byte_image = BitmapToByteArray(ImgBitmap);
 
         detailPhoto.setImageBitmap(ImgBitmap);
-        detailName.setText(title);
+        detailName.setText(originalTitle);
 
         ActivityCompat.requestPermissions(DetailActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
         ActivityCompat.requestPermissions(DetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
@@ -130,6 +150,53 @@ public class DetailActivity extends AppCompatActivity {
                     //editText에서 받은 문자열 저장
                     str = detailName.getText().toString();
                     detailName.setText(str);
+
+                    // firebase에 저장
+                    /*FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
+                            .child(currentUser.getUid()).child("Object");
+                    String key = databaseReference.push().getKey();
+                    DatabaseReference keyRef = databaseReference.child(key);
+
+                    Map<String, Object> taskMap = new HashMap<String, Object>();
+                    taskMap.put("title", str);
+
+                    keyRef.updateChildren(taskMap);*/
+
+                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
+                            .child(currentUser.getUid()).child("Object");
+
+
+                    DatabaseReference ref = databaseReference.child(key).child("title");
+                    ref.setValue(str);
+                    Log.e("key", key);
+
+                    /*databaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                                ItemObject itemObject = snapshot.getValue(ItemObject.class);
+                                String title = itemObject.getTitle();
+                                String En1 = itemObject.getPhoto();
+
+                                if (title.equals(originalTitle)){
+                                    key = snapshot.getKey();
+                                    Log.e("key", key);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });*/
+
+
+
+
                     return true;
                 }
                 return false;
@@ -306,5 +373,12 @@ public class DetailActivity extends AppCompatActivity {
         Date date = new Date(dateTaken);
         SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
         return dateFormat.format(date);
+    }
+
+    private Uri getImageUri(Context context, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100,bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 }

@@ -6,6 +6,7 @@ public class ItemObject {
 
         private String title;
         private String Photo;
+        private String key;
 
         public String getTitle() {
             return title;
@@ -24,13 +25,21 @@ public class ItemObject {
             this.Photo=photo;
         }
 
-        public ItemObject(String title, String photo) {
-        this.title = title;
-        this.Photo=photo;
+        public ItemObject(String key, String title, String photo) {
+            this.key=key;
+            this.title = title;
+            this.Photo=photo;
         }
         public ItemObject() {}
 
-    }
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+}
 
 
 

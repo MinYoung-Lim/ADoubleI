@@ -126,10 +126,9 @@ public class MainUpload extends AppCompatActivity {
 
             @Override
             public void onLongClick(View view, int position) {
-                //String currentTitle = mItem.get(position).getTitle();
-               // String currentPhoto = mItem.get(position).getPhoto();
-              //  showDeleteDataDialog(currentTitle,currentPhoto);
             }
+
+
         }));
 
 
@@ -157,49 +156,8 @@ public class MainUpload extends AppCompatActivity {
 
 
     }
-   /* private void showDeleteDataDialog(final String currentTitle, final String currentPhoto){
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainUpload.this);
-        builder.setTitle("Delete");
-        builder.setMessage("정말로 삭제하시겠습니까?");
-        builder.setPositiveButton("네", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                    //"yes" -> delete
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
-                        .child(currentUser.getUid()).child("Object");
 
-                Query mQuery = databaseReference.orderByChild("title").equalTo(currentPhoto);
-                mQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot ds: snapshot.getChildren()){
-                            ds.getRef().removeValue();
-                        }
-                        Toast.makeText(MainUpload.this,"삭제되었습니다.",Toast.LENGTH_SHORT);
 
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(MainUpload.this,error.getMessage(),Toast.LENGTH_SHORT);
-                    }
-                });
-
-            }
-        });
-        builder.setNegativeButton("아니요", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                    //"no" -> just dismiss dialog
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
-
-    }
-
-    */
     public interface ClickListener {
         void onClick(View view, int position);
 
@@ -268,7 +226,7 @@ public class MainUpload extends AppCompatActivity {
 
             //ImgBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
 
-            ImgBitmap = resize(getApplicationContext(), filePath, 300);
+            ImgBitmap = resize(getApplicationContext(), filePath, 1000);
 
             Byte_image = BitmapToByteArray(ImgBitmap);
 
@@ -279,8 +237,7 @@ public class MainUpload extends AppCompatActivity {
 
                 // 이미지 암호화
                 EncryptImg = aesCoderAndriod.encrypt(seed, Byte_image);
-                //EncryptImg = Base64.encodeToString(Byte_image,0);
-                //String EncryptString = EncryptImg.toString();
+
                 String EncrypString = Base64.encodeToString(EncryptImg,0);
 
                // Log.e("Encrypt", EncrypString);
@@ -324,9 +281,7 @@ public class MainUpload extends AppCompatActivity {
 
                     Log.e("받았을때의 key", key);
 
-                   // Log.e("En1", En1);
-                    // byte[] En2 = En1.getBytes();
-                    // Log.e("En2", En2.toString());
+
                     byte[] Dn1 = (Base64.decode(En1, 0));
                     byte[] Dn2 = new byte[0];
                     try {
@@ -446,9 +401,9 @@ public class MainUpload extends AppCompatActivity {
             while (true) {//2번
                 if (width / 2 < resize || height / 2 < resize)
                     break;
-                width /= 4;
-                height /= 4;
-                samplesize *= 4;
+                width /= 2;
+                height /= 2;
+                samplesize *= 2;
             }
 
             options.inSampleSize = samplesize;

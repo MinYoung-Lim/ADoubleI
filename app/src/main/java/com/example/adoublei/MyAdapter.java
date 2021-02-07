@@ -1,6 +1,7 @@
 package com.example.adoublei;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.util.TypedValue;
 import android.view.ContextMenu;
@@ -13,10 +14,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import static android.widget.Toast.LENGTH_SHORT;
 
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.RecyclerViewHolders> {
@@ -38,8 +44,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.RecyclerViewHolder
 
 
 
-    public class RecyclerViewHolders extends RecyclerView.ViewHolder
-            implements View.OnCreateContextMenuListener {
+    public class RecyclerViewHolders extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 
          TextView title;
          ImageView imageView;
@@ -52,42 +57,34 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.RecyclerViewHolder
             this.imageView = itemView.findViewById(R.id.photo_listitem);
 
 //
-            itemView.setOnCreateContextMenuListener(this);
+           itemView.setOnCreateContextMenuListener(this);
 
 
         }
 
 
-    private final MenuItem.OnMenuItemClickListener onEditMenu = new MenuItem.OnMenuItemClickListener() {
+     private final MenuItem.OnMenuItemClickListener onEditMenu = new MenuItem.OnMenuItemClickListener() {
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case 1001:
 
-                    mItem.remove(getAdapterPosition());
-                  //  String photo = mItem.remove(getAdapterPosition()).getPhoto();
-                  // String title = mItem.remove(getAdapterPosition()).getTitle();
+                   // mItem.remove(getAdapterPosition());
+                    final String currentKey = mItem.get(getAdapterPosition()).getKey();
+
+                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                    final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
+                            .child(currentUser.getUid()).child("Object");
+
+                    databaseReference.child(currentKey).removeValue();
+
                     notifyItemRemoved(getAdapterPosition());
                     notifyItemRangeChanged(getAdapterPosition(), mItem.size());
-
-                 /*   FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
-                            .child(currentUser.getUid()).child("Object");
-                    databaseReference.removeEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    notifyDataSetChanged();
 
 
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                    
-                  */
                     break;
             }
             return true;
@@ -96,12 +93,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.RecyclerViewHolder
     };
 
 
+
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             MenuItem Delete = menu.add(Menu.NONE,1001,1,"삭제");
             Delete.setOnMenuItemClickListener(onEditMenu);
         }
+
+
+
+
     }
+
+
 
 
 
@@ -120,11 +124,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.RecyclerViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolders holder, int position) {
-      /*  Glide.with(context)
+       /* Glide.with(context)
                 .load(mItem.get(position).getPhoto())
                 .into(holder.imageView);
 
-       */
+
+        */
+
         ItemObject itemObject = mItem.get(position);
         String photo = itemObject.getPhoto();
         holder.title.setTextSize(TypedValue.COMPLEX_UNIT_SP,10);

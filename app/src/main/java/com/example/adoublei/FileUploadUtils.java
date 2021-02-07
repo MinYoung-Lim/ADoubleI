@@ -6,13 +6,12 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
+
+
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-
-
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +19,8 @@ import java.text.ParseException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -44,9 +45,11 @@ public class FileUploadUtils {
 
 
     public static void send2Server(File file) {
-        RequestBody requestBody = new MultipartBody.Builder()
+        MediaType mediaType = MediaType.parse("image/*");
+
+        okhttp3.RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("image", file.getName(), RequestBody.create(MediaType.parse("image/*"), file))
+                .addFormDataPart("image", file.getName(), okhttp3.RequestBody.create(mediaType, file))
                 .build();
 
         Request request = new Request.Builder()

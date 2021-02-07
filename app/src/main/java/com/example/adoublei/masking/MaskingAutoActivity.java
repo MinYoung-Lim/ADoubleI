@@ -35,7 +35,7 @@ import static com.example.adoublei.FileUploadUtils.result8;
 import static com.example.adoublei.FileUploadUtils.NumOfClass;
 
 
-public abstract class MaskingAutoActivity extends AppCompatActivity implements BottomSheetDialog.BottomSheetListener {
+public class MaskingAutoActivity extends AppCompatActivity implements BottomSheetDialog.BottomSheetListener {
 
     private ImageView beforeMasking;
     private ArrayList<MaskingItem> mItem = new ArrayList<>();
@@ -102,58 +102,39 @@ public abstract class MaskingAutoActivity extends AppCompatActivity implements B
 
                 //아래는 값이 잘 들어왔는지 확인하고싶을때 사용하면 됨
                 /*String result="";
-
                 result += "인식된 라벨 개수 : " + NumOfClass + "\n";
-
                 result+="result1 : ";
-
                 for(int i=0;i<5;i++){
                     result += result1[i] + " ";
                 }
-
                 result+="\nresult2 : ";
-
                 for(int i=0;i<5;i++){
                     result += result2[i] + " ";
                 }
-
                 result+="\nresult3 : ";
-
                 for(int i=0;i<5;i++){
                     result += result3[i] + " ";
                 }
-
                 result+="\nresult4 : ";
-
                 for(int i=0;i<5;i++){
                     result += result4[i] + " ";
                 }
-
                 result+="\nresult5 : ";
-
                 for(int i=0;i<5;i++){
                     result += result5[i] + " ";
                 }
-
                 result+="\nresult6 : ";
-
                 for(int i=0;i<5;i++){
                     result += result6[i] + " ";
                 }
-
                 result+="\nresult7 : ";
-
                 for(int i=0;i<5;i++){
                     result += result7[i] + " ";
                 }
-
                 result+="\nresult8 : ";
-
                 for(int i=0;i<5;i++){
                     result += result8[i] + " ";
                 }
-
-
                 Log.e("result", result);*/
             }
         }, 1000);
@@ -174,6 +155,7 @@ public abstract class MaskingAutoActivity extends AppCompatActivity implements B
         result8 = new String[]{"", "", "", "", ""};
         NumOfClass=0;
     }
+
 
     @Override
     public void onSwitchChecked(boolean checked) {

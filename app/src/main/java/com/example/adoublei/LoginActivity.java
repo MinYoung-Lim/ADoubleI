@@ -45,6 +45,30 @@ public class LoginActivity extends AppCompatActivity {
         mEtPassword = (EditText)findViewById(R.id.passwordCheckEditText);
         mEtPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+/*        user.delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.e("회원탈퇴", "성공");
+                        }
+                        else
+                            Log.e("회원탈퇴", "실패");
+                    }
+                });*/
+
+        FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
+        if (user1 != null) {
+            Intent intent = new Intent(getApplicationContext(), LoginPwdActivity.class);
+            startActivity(intent);
+            this.finish();
+        } else {
+            Intent intent1 = new Intent(getApplicationContext(),InputEmailRealActivity.class);
+            startActivity(intent1);
+            this.finish();
+        }
 
     }
 

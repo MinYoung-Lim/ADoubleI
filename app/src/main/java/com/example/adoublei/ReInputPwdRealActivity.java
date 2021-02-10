@@ -1,6 +1,8 @@
 package com.example.adoublei;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import io.grpc.internal.LogExceptionRunnable;
 
 public class ReInputPwdRealActivity extends AppCompatActivity {
 
@@ -188,6 +192,8 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     // Sign in success, update UI with the signed-in user's information
                                     //updateUI(user);
+                                    Log.e("email", email);
+                                    Log.e("pwd",pwd);
 
 
                                 } else {
@@ -199,6 +205,12 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
                                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                                 userID = currentUser.getUid();
                                 writeUser(email,name,pwd,userID);
+
+                                // SharedPreferences에 저장
+                                SharedPreferences pref = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = pref.edit();
+                                editor.putString("email", email);
+                                editor.commit();
 
                                 // 사용자 정보 업로드 후 메인 화면으로 이동
                                 Intent intent2 = new Intent(getApplicationContext(), MainUpload.class);

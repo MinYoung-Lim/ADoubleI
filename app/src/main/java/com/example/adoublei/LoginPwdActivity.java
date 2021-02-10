@@ -1,13 +1,25 @@
 package com.example.adoublei;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import static com.example.adoublei.UserData.password;
 
 public class LoginPwdActivity extends AppCompatActivity {
 
@@ -20,12 +32,15 @@ public class LoginPwdActivity extends AppCompatActivity {
     ImageView iv_circle_1, iv_circle_2, iv_circle_3, iv_circle_4, iv_circle_5, iv_circle_6;
     ImageView iv_backspace, iv_back;
     private StringBuffer pwd = new StringBuffer("");
-
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_pwd_real);
+
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
 
         tv_1 = findViewById(R.id.tv_1);
         tv_2 = findViewById(R.id.tv_2);
@@ -73,6 +88,17 @@ public class LoginPwdActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public void onStart() {
+
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        //updateUI(currentUser);
+
+    }
+
+
 
     @Override
     public void onBackPressed()  // 뒤로가기 방지
@@ -149,14 +175,45 @@ public class LoginPwdActivity extends AppCompatActivity {
     }
 
     private void checkPwdIsFull() {
-        if (pwd.length()==6){
+
+        //sharedpreferences에 저장된 email 가져오기
+        //SharedPreferences prefs = getSharedPreferences("auto", Activity.MODE_PRIVATE);
+        //String email = prefs.getString("email", "NULL"); //키값, 디폴트값
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        String email = user.getEmail();
+
+        //Log.e("email", email);
 
 
-            // Firebase에서 가져온 비밀번호와 입력받은 pwd가 같은지 비교 후 같을때에만 아래의 코드 실행하도록 짜야함!!!
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
 
+        if (pwd.length()==6) {
+            mAuth.signInWithEmailAndPassword(email, String.valueOf(pwd))
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                Log.e("로그인", "성공");
+
+                                Intent intent = new Intent(getApplicationContext(), MainUpload.class);
+                                startActivity(intent);
+                                finish();
+
+                                //FirebaseUser user = mAuth.getCurrentUser();
+                                //updateUI(user);
+                            } else {
+                                Log.e("로그인", "실패");
+                                Toast.makeText(getApplicationContext(), "로그인 실패", Toast.LENGTH_SHORT).show();
+                                //updateUI(null);
+                            }
+
+                            // ...
+                        }
+                    });
         }
+
+
+
     }
 
 

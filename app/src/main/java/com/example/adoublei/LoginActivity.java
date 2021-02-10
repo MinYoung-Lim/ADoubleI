@@ -62,20 +62,21 @@ public class LoginActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.loginButton:
-                    Log.e("클릭","클릭");
+                    /*Log.e("클릭","클릭");
                     signin();
                     Intent intent = getIntent();
                     String name = intent.getStringExtra("name");
-                    Intent intent2 = new Intent(LoginActivity.this, MainUpload.class);
+                    Intent intent2 = new Intent(LoginActivity.this, LoginPwdActivity.class);
                     intent2.putExtra("name",name);
-                    startActivity(intent2);
-
-
+                    startActivity(intent2);*/
+                    Intent intent = new Intent(getApplicationContext(), LoginPwdActivity.class);
+                    startActivity(intent);
                        break;
                 case R.id.btn_to_signup:
-                    Log.e("클릭","클릭");
-
-                      startSignUpActivity();
+                    //Log.e("클릭","클릭");
+                    Intent intent1 = new Intent(getApplicationContext(),InputEmailRealActivity.class);
+                    startActivity(intent1);
+                    break;
             }
         }
     };
@@ -120,8 +121,5 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-    private void startSignUpActivity(){
-        Intent intent = new Intent(this,InputEmailRealActivity.class);
-        startActivity(intent);
-    }
+
 }

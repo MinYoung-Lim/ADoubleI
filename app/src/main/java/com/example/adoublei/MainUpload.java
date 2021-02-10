@@ -467,7 +467,7 @@ public class MainUpload extends AppCompatActivity {
         }
         else {
             // 모두 허용 상태
-            Toast.makeText(this, "권한을 모두 허용", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "권한을 모두 허용", Toast.LENGTH_SHORT).show();
         }
     }
 

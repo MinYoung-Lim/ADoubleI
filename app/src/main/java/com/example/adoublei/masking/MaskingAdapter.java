@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -19,24 +20,44 @@ public class MaskingAdapter extends RecyclerView.Adapter<MaskingAdapter.Recycler
 
     private Context context;
     private ArrayList<MaskingItem> mItem;
+    private OnItemClickListener listener;
 
     public MaskingAdapter(ArrayList<MaskingItem> item){
         //this.context = context;
         this.mItem = item;
     }
 
-    public class RecyclerViewHolders extends RecyclerView.ViewHolder {
+    public interface OnItemClickListener {
+        void onItemClick(View v, int position) ;
+    }
 
-        protected TextView title;
-        protected Switch option;
+    public class RecyclerViewHolders extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        public RecyclerViewHolders(View MaksingItem) {
-            super(MaksingItem);
-            this.title = (TextView) itemView.findViewById(R.id.title_option);
-            this.option = (Switch) itemView.findViewById(R.id.switch_option);
+        protected Button title;
+
+        public RecyclerViewHolders(@NonNull View itemView) {
+            super(itemView);
+
+            this.title = (Button) itemView.findViewById(R.id.button_option);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if(listener!=null)
+            {
+                int position=getAdapterPosition();
+                if(position!=RecyclerView.NO_POSITION)
+                {
+                    listener.onItemClick(v, position);
+                }
+
+            }
 
         }
     }
+
 
     @NonNull
     @Override
@@ -52,19 +73,12 @@ public class MaskingAdapter extends RecyclerView.Adapter<MaskingAdapter.Recycler
         //holder.title.setTextSize(TypedValue.COMPLEX_UNIT_SP,10);
         //holder.title.setGravity(Gravity.LEFT);
         holder.title.setText(mItem.get(position).getTitle());
-        holder.option.setChecked(mItem.get(position).getOption());
-//        holder.option.setOnCheckedChangeListener(
-//            new CompoundButton.OnCheckedChangeListener() {
-//                @Override
-//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                    if (isChecked){
-//
-//                    }
-//                    else{
-//                    }
-//                }
-//            }
-//        );
+        holder.title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
@@ -72,7 +86,6 @@ public class MaskingAdapter extends RecyclerView.Adapter<MaskingAdapter.Recycler
         return (null != mItem ? mItem.size() : 0);
     }
 }
-
 
 
 

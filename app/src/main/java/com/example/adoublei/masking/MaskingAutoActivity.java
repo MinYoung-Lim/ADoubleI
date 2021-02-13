@@ -34,8 +34,14 @@ import static com.example.adoublei.FileUploadUtils.result7;
 import static com.example.adoublei.FileUploadUtils.result8;
 import static com.example.adoublei.FileUploadUtils.NumOfClass;
 
-
 public class MaskingAutoActivity extends AppCompatActivity implements BottomSheetDialog.BottomSheetListener {
+
+    static String[] result1_ex1 = {"id", "0.47440708", "0.3533485", "0.6719552", "0.38725245"};
+    static String[] result_ex2 = {"name", "0.59669155", "0.29243743", "0.686663", "0.3303905"};
+    static String[] result_ex3 = {"address", "0.4680234", "0.365", "70442", "0.70887196", "0.4280191"};
+    static int NumOfClass_ex = 3;
+    public static String[][] result = new String[8][5];
+
 
     private ImageView beforeMasking;
     private ArrayList<MaskingItem> mItem = new ArrayList<>();
@@ -44,22 +50,25 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
     File tempSelectFile;
     String filePath = "";
 
+    int image_width=0;
+    int image_height=0;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_masking_auto);
 
         byte[] arr = getIntent().getByteArrayExtra("image");
         image = BitmapFactory.decodeByteArray(arr, 0, arr.length);
-        beforeMasking = (ImageView)findViewById(R.id.imageMasking);
+        beforeMasking = (ImageView) findViewById(R.id.imageMasking);
         beforeMasking.setImageBitmap(image);
-        afterMasking = Bitmap.createBitmap(image).copy(Bitmap.Config.ARGB_8888,true);
+        afterMasking = Bitmap.createBitmap(image).copy(Bitmap.Config.ARGB_8888, true);
 
-        Bitmap resized = Bitmap.createScaledBitmap(image,(int)(image.getWidth()*0.7), (int)(image.getHeight()*0.7), true);
+        image_width = (int) (image.getWidth()*0.7);
+        image_height = (int) (image.getHeight()*0.7);
+        Bitmap resized = Bitmap.createScaledBitmap(image, image_width, image_height, true);
 
         filePath = getRealPathFromURI(getImageUri(getApplicationContext(), resized));
-        //filePath = getRealPathFromURI(uri);
 
         tempSelectFile = new File(filePath);
 
@@ -71,8 +80,6 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
                 bottomSheet.show(getSupportFragmentManager(), "detailBottomSheet");
             }
         });
-
-
 
         // 인공지능 Part  21-02-03 임민영
         ResetStaticResult();  // static result, NumOfClass 초기화
@@ -97,8 +104,67 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
                 // 은지야 이부분에 result1~8, NumOfClass 사용하는 코드 작성하면돼!
                 // 다른데서 사용하면 값이 안들어와져있을거야..!
 
+                // 은지야! 이건 서버 연결했을 때야! 서버 연결 안했을 때는 switch문 전체 주석 처리!
 
+                /*
+                switch (NumOfClass){
+                    case 0:
+                        break;
+                    case 1:
+                        result[0] = result1;
+                        break;
+                    case 2:
+                        result[0] = result1;
+                        result[1] = result2;
+                        break;
+                    case 3:
+                        result[0] = result1;
+                        result[1] = result2;
+                        result[2] = result3;
+                        break;
+                    case 4:
+                        result[0] = result1;
+                        result[1] = result2;
+                        result[2] = result3;
+                        result[3] = result4;
+                        break;
+                    case 5:
+                        result[0] = result1;
+                        result[1] = result2;
+                        result[2] = result3;
+                        result[3] = result4;
+                        result[4] = result5;
+                        break;
+                    case 6:
+                        result[0] = result1;
+                        result[1] = result2;
+                        result[2] = result3;
+                        result[3] = result4;
+                        result[4] = result5;
+                        result[5] = result6;
+                        break;
+                    case 7:
+                        result[0] = result1;
+                        result[1] = result2;
+                        result[2] = result3;
+                        result[3] = result4;
+                        result[4] = result5;
+                        result[5] = result6;
+                        result[6] = result7;
+                        break;
+                    case 8:
+                        result[0] = result1;
+                        result[1] = result2;
+                        result[2] = result3;
+                        result[3] = result4;
+                        result[4] = result5;
+                        result[5] = result6;
+                        result[6] = result7;
+                        result[7] = result8;
+                        break;
+                }
 
+                 */
 
                 //아래는 값이 잘 들어왔는지 확인하고싶을때 사용하면 됨
                 /*String result="";
@@ -140,7 +206,6 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
         }, 1000);
 
 
-
     }
 
     private void ResetStaticResult() {
@@ -156,19 +221,39 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
         NumOfClass=0;
     }
 
-
     @Override
-    public void onSwitchChecked(boolean checked) {
-        if (checked == true) {
-            Canvas canvas = new Canvas(afterMasking);
+    public void onButtonClicked(View view, String text) {
+        Canvas canvas = new Canvas(afterMasking);
 
-            canvas.drawRect(100, 100, 200, 200, new Paint());
+        //이건 서버 연결한거! - 수정 필요
+//        int image_width = afterMasking.getWidth();
+//        int image_height = afterMasking.getHeight();
+//        for(int i=0;i<NumOfClass;i++){
+//            if(text.equals(result[i][0])){
+//                canvas.drawRect( Integer.parseInt(result[i][1])*image_width,
+//                        Integer.parseInt(result[i][2])*image_height,
+//                        Integer.parseInt(result[i][3])*image_width,
+//                        Integer.parseInt(result[i][4])*image_height, new Paint());
+//            }
+//        }
 
-            beforeMasking.setImageBitmap(afterMasking);
-        } else{
-            beforeMasking.setImageBitmap(image);
+        // 은지야! 이게 서버 연결 안한거!
+        switch (text){
+            case "id":
+                canvas.drawRect(100, 100, 200, 200, new Paint());
+                break;
+            case "name":
+                canvas.drawRect(130, 130, 200, 200, new Paint());
+                break;
+            case "address":
+                canvas.drawRect(160, 160, 200, 200, new Paint());
+                break;
+            default:
+                break;
         }
 
+
+        beforeMasking.setImageBitmap(afterMasking);
     }
 
     private String getRealPathFromURI(Uri contentURI) {
@@ -200,3 +285,16 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
     }
 
 }
+
+//    @Override
+//    public void onSwitchChecked(boolean checked) {
+//        if (checked == true) {
+//            Canvas canvas = new Canvas(afterMasking);
+//
+//            canvas.drawRect(100, 100, 200, 200, new Paint());
+//
+//            beforeMasking.setImageBitmap(afterMasking);
+//        } else{
+//            beforeMasking.setImageBitmap(image);
+//        }
+//    }

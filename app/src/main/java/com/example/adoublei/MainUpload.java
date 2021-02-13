@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -44,14 +46,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.protobuf.DescriptorProtos;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import static android.graphics.BitmapFactory.decodeByteArray;
+import static com.example.adoublei.InputEmail.mContext;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class MainUpload extends AppCompatActivity {
@@ -80,8 +85,10 @@ public class MainUpload extends AppCompatActivity {
     private byte[] Byte_image;
     private byte[] EncryptImg;
 
-
-
+    public String path;
+    public String[] delete_path = null;
+    ArrayList<Object> delete_path2 = new ArrayList<Object>();
+    int num = 0;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,12 +106,13 @@ public class MainUpload extends AppCompatActivity {
 
         mRecyclerView = findViewById(R.id.recyclerview_main_list);
         int numberOfColumns = 3;
-        GridLayoutManager mGridLayoutManager = new GridLayoutManager(getApplication(),numberOfColumns);
+        GridLayoutManager mGridLayoutManager = new GridLayoutManager(getApplication(), numberOfColumns);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
         mRecyclerView.setHasFixedSize(true);
 
         mItem = new ArrayList<>();
         loadPhoto();
+
         myAdapter = new MyAdapter(mItem);
         mRecyclerView.setAdapter(myAdapter);
 
@@ -264,6 +272,19 @@ public class MainUpload extends AppCompatActivity {
 
 
     }
+    public void fileDelete(){
+        for(int i=0;i<delete_path2.size();i++){
+            //fileDelete((String) delete_path2.get(i));
+            Log.e("hello", (String) delete_path2.get(i));
+            File file = new File((String) delete_path2.get(i));
+            if(file.exists()){
+                if(file.delete()){
+                    Log.e("file delete", "성공");
+                }
+                Log.e("file delete", "실패");
+            }
+        }
+    }
     public void loadPhoto() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
@@ -272,6 +293,7 @@ public class MainUpload extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mItem.clear();
+                num = 0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                     ItemObject itemObject = snapshot.getValue(ItemObject.class);
@@ -296,8 +318,33 @@ public class MainUpload extends AppCompatActivity {
                     ItemObject itemObject1 = new ItemObject(key, title, Dn4.toString());
                     mItem.add(itemObject1);
 
+                    //File delete_file = new File(please);
+                    //boolean delete = delete_file.delete();
+                    //fileDelete("");
+                    //fileDelete(delete_path);
+
+//                    String delete_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/";
+//
+//                    File delete_file;
+//                    if(num==0){
+//                        delete_path += "Title.jpg";
+//                        delete_file = new File(delete_path);
+//                        //delete_path = "/storage/emulated/Pictures/Title.jpg";
+//                    }
+//                    else{
+//                        delete_path += "Title ("+num+").jpg";
+//                        delete_file = new File(delete_path);
+//
+//                    }
+//                    Log.e("delete_path",delete_path);
+//
+//                    delete_file.delete();
+                    num++;
+
+
                 }
                 myAdapter.notifyDataSetChanged();
+                num = 0;
             }
 
             @Override
@@ -305,6 +352,19 @@ public class MainUpload extends AppCompatActivity {
 
             }
         });
+
+
+
+
+//        File file = new File(getPath(Uri.parse(path)));
+//        if(file.exists()){
+//            if(file.delete()){
+//                Log.e("file delete", "성공");
+//            }
+//            Log.e("file delete", "실패");
+//        }
+
+
    /*     databaseReference.removeEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -329,10 +389,37 @@ public class MainUpload extends AppCompatActivity {
 
     }
 
-    private Uri getImageUri(Context context, Bitmap inImage) {
+    public static boolean fileDelete(String filePath){
+        try{
+            File file = new File(filePath);
+
+            if(file.exists()){
+
+                file.delete();
+                return true;
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public String getPath(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        startManagingCursor(cursor);
+        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst(); 
+        return cursor.getString(columnIndex);
+    }
+
+    private Uri getImageUri(Context context, Bitmap inImage) { //bitmap -> Uri
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100,bytes);
-        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), inImage, "Title", null);
+        path = MediaStore.Images.Media.insertImage(context.getContentResolver(), inImage, "Title", null);
+
+        delete_path2.add(getPath(Uri.parse(path)));
+
         return Uri.parse(path);
     }
 

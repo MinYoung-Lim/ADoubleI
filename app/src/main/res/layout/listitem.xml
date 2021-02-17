@@ -13,7 +13,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:scaleType="fitCenter"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="10dp"
         tools:ignore="ExtraText" />
 
     <TextView
@@ -22,7 +22,7 @@
         android:layout_height="50dp"
         android:scaleType="fitCenter"
         android:gravity="center"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="10dp"
         android:padding="10dp"
         android:textSize="8sp" />
 

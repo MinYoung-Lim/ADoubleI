@@ -331,7 +331,7 @@ public class MainUpload extends AppCompatActivity {
                     HashMap<Object,String> object = new HashMap<Object, String>();
 
                 object.put("key", key);
-                object.put("title","IMG_" + System.currentTimeMillis());
+                object.put("title","IMG_" + System.currentTimeMillis()/10000000);
                 object.put("photo",EncrypString);
 
                 Log.e("올릴때의 key", key);

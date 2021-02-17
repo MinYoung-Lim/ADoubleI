@@ -12,13 +12,7 @@
     tools:context=".MainActivity"
     >
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigation"
-        android:layout_width="200dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="left"
-        app:headerLayout="@layout/mypage_navi"
-        app:menu="@menu/navi_menu" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -125,6 +119,14 @@
 
 
     </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        app:headerLayout="@layout/mypage_navi"
+        app:menu="@menu/navi_menu" />
 
 
 

@@ -1,6 +1,7 @@
 package com.example.adoublei;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.camera2.TotalCaptureResult;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -31,13 +33,16 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -76,6 +81,7 @@ public class MainUpload extends AppCompatActivity {
     private boolean isChecked = false;
     private TextView textView;
     private Bitmap ImgBitmap;
+    private NavigationView navigation;
 
     private static final String charsetName = "UTF-8";
     private  String useruuid = "name";
@@ -103,6 +109,27 @@ public class MainUpload extends AppCompatActivity {
 
         mypage = findViewById(R.id.mypage); //마이페이지 버튼
         drawerLayout = findViewById(R.id.firstlayout); //마이페이지 레이아웃
+        navigation = findViewById(R.id.navigation);
+
+        navigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId())
+                {
+                    case R.id.pwChange:
+                        changePwd();
+                        break;
+                    case R.id.exit:
+                        userDelete();
+                        break;
+
+                }
+
+                DrawerLayout drawer = findViewById(R.id.firstlayout);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
 
         mRecyclerView = findViewById(R.id.recyclerview_main_list);
         int numberOfColumns = 3;
@@ -161,6 +188,54 @@ public class MainUpload extends AppCompatActivity {
         }
         );
 
+
+
+    }
+
+    private void changePwd() {
+
+        Intent intent = new Intent(getApplicationContext(), ChangePwdActivity.class);
+        startActivity(intent);
+
+    }
+
+    private void userDelete() {
+
+        AlertDialog.Builder msgBuilder = new AlertDialog.Builder(MainUpload.this)
+                .setTitle("회원 탈퇴")
+                .setMessage("정말로 회원을 탈퇴하시겠습니까?")
+                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialogInterface, int i) {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                            user.delete()
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                     public void onComplete(@NonNull Task<Void> task) {
+                                         if (task.isSuccessful()) {
+                                             Toast.makeText(getApplicationContext(), "회원 탈퇴에 성공하였습니다", Toast.LENGTH_LONG).show();
+                                             Log.e("회원탈퇴", "성공");
+                                             finishAffinity();
+                                             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                             startActivity(intent);
+                                             System.exit(0);
+
+                                         }
+                                         else{
+                                             Log.e("회원탈퇴", "실패");
+                                             Toast.makeText(getApplicationContext(), "회원 탈퇴에 실패하였습니다", Toast.LENGTH_LONG).show();
+                                         }
+                    }
+                });
+
+                    } })
+                .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+
+        AlertDialog msgDlg = msgBuilder.create();
+        msgDlg.show();
 
 
     }

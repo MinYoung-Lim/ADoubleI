@@ -67,6 +67,8 @@ public class DetailActivity extends AppCompatActivity {
     String key;
     private DatabaseReference mDatabase;
 
+    public String photo_intent;
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -89,7 +91,7 @@ public class DetailActivity extends AppCompatActivity {
         final String originalTitle = intent.getStringExtra("title");
         final String key = intent.getStringExtra("key");
 
-
+        photo_intent = photo;
 
         Bitmap ImgBitmap = null;
 
@@ -230,7 +232,8 @@ public class DetailActivity extends AppCompatActivity {
     public static byte[] BitmapToByteArray(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 70, baos);
-        return baos.toByteArray();
+        byte[] b = baos.toByteArray();
+        return b;
     }
 
     //byte를 Bitmap으로 변환
@@ -277,7 +280,8 @@ public class DetailActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(DetailActivity.this, MaskingAutoActivity.class);
-                        intent.putExtra("image", Byte_image);
+                        intent.putExtra("image_string", photo_intent);
+                        //intent.putExtra("image", Byte_image);
                         startActivity(intent);
                     }
                 });
@@ -285,7 +289,8 @@ public class DetailActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(DetailActivity.this, MaskingActivity.class);
-                        intent.putExtra("image", Byte_image);
+                        intent.putExtra("image_string", photo_intent);
+                        //intent.putExtra("image", Byte_image);
                         startActivity(intent);
                     }
                 });

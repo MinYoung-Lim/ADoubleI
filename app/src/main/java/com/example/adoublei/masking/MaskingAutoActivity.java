@@ -22,6 +22,7 @@ import com.example.adoublei.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import static com.example.adoublei.FileUploadUtils.result1;
@@ -36,12 +37,12 @@ import static com.example.adoublei.FileUploadUtils.NumOfClass;
 
 public class MaskingAutoActivity extends AppCompatActivity implements BottomSheetDialog.BottomSheetListener {
 
-    static String[] result1_ex1 = {"id", "0.47440708", "0.3533485", "0.6719552", "0.38725245"};
-    static String[] result_ex2 = {"name", "0.59669155", "0.29243743", "0.686663", "0.3303905"};
-    static String[] result_ex3 = {"address", "0.4680234", "0.365", "70442", "0.70887196", "0.4280191"};
-    static int NumOfClass_ex = 3;
+    //static String[] result1_ex1 = {"id", "0.47440708", "0.3533485", "0.6719552", "0.38725245"};
+    //static String[] result_ex2 = {"name", "0.59669155", "0.29243743", "0.686663", "0.3303905"};
+    //static String[] result_ex3 = {"address", "0.4680234", "0.365", "70442", "0.70887196", "0.4280191"};
+    //static int NumOfClass_ex = 3;
     public static String[][] result = new String[8][5];
-
+    public static int NumOfClass_Masking;
 
     private ImageView beforeMasking;
     private ArrayList<MaskingItem> mItem = new ArrayList<>();
@@ -58,17 +59,22 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_masking_auto);
 
-        byte[] arr = getIntent().getByteArrayExtra("image");
-        image = BitmapFactory.decodeByteArray(arr, 0, arr.length);
+        //byte[] arr = getIntent().getByteArrayExtra("image");
+        String image_intent = getIntent().getStringExtra("image_string");
+
+        Bitmap image = null;
+        image = resize(getApplicationContext(), Uri.parse(image_intent), 1000);
+
+        //image = BitmapFactory.decodeByteArray(arr, 0, arr.length);
         beforeMasking = (ImageView) findViewById(R.id.imageMasking);
         beforeMasking.setImageBitmap(image);
         afterMasking = Bitmap.createBitmap(image).copy(Bitmap.Config.ARGB_8888, true);
 
-        image_width = (int) (image.getWidth()*0.7);
-        image_height = (int) (image.getHeight()*0.7);
+        image_width = image.getWidth();
+        image_height = image.getHeight();
         Bitmap resized = Bitmap.createScaledBitmap(image, image_width, image_height, true);
 
-        filePath = getRealPathFromURI(getImageUri(getApplicationContext(), resized));
+        filePath = getRealPathFromURI(getImageUri(getApplicationContext(), image));
 
         tempSelectFile = new File(filePath);
 
@@ -105,8 +111,7 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
                 // 다른데서 사용하면 값이 안들어와져있을거야..!
 
                 // 은지야! 이건 서버 연결했을 때야! 서버 연결 안했을 때는 switch문 전체 주석 처리!
-
-                /*
+                NumOfClass_Masking = NumOfClass;
                 switch (NumOfClass){
                     case 0:
                         break;
@@ -164,44 +169,43 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
                         break;
                 }
 
-                 */
 
                 //아래는 값이 잘 들어왔는지 확인하고싶을때 사용하면 됨
-                /*String result="";
-                result += "인식된 라벨 개수 : " + NumOfClass + "\n";
-                result+="result1 : ";
-                for(int i=0;i<5;i++){
-                    result += result1[i] + " ";
-                }
-                result+="\nresult2 : ";
-                for(int i=0;i<5;i++){
-                    result += result2[i] + " ";
-                }
-                result+="\nresult3 : ";
-                for(int i=0;i<5;i++){
-                    result += result3[i] + " ";
-                }
-                result+="\nresult4 : ";
-                for(int i=0;i<5;i++){
-                    result += result4[i] + " ";
-                }
-                result+="\nresult5 : ";
-                for(int i=0;i<5;i++){
-                    result += result5[i] + " ";
-                }
-                result+="\nresult6 : ";
-                for(int i=0;i<5;i++){
-                    result += result6[i] + " ";
-                }
-                result+="\nresult7 : ";
-                for(int i=0;i<5;i++){
-                    result += result7[i] + " ";
-                }
-                result+="\nresult8 : ";
-                for(int i=0;i<5;i++){
-                    result += result8[i] + " ";
-                }
-                Log.e("result", result);*/
+//                String result="";
+//                result += "인식된 라벨 개수 : " + NumOfClass + "\n";
+//                result+="result1 : ";
+//                for(int i=0;i<5;i++){
+//                    result += result1[i] + " ";
+//                }
+//                result+="\nresult2 : ";
+//                for(int i=0;i<5;i++){
+//                    result += result2[i] + " ";
+//                }
+//                result+="\nresult3 : ";
+//                for(int i=0;i<5;i++){
+//                    result += result3[i] + " ";
+//                }
+//                result+="\nresult4 : ";
+//                for(int i=0;i<5;i++){
+//                    result += result4[i] + " ";
+//                }
+//                result+="\nresult5 : ";
+//                for(int i=0;i<5;i++){
+//                    result += result5[i] + " ";
+//                }
+//                result+="\nresult6 : ";
+//                for(int i=0;i<5;i++){
+//                    result += result6[i] + " ";
+//                }
+//                result+="\nresult7 : ";
+//                for(int i=0;i<5;i++){
+//                    result += result7[i] + " ";
+//                }
+//                result+="\nresult8 : ";
+//                for(int i=0;i<5;i++){
+//                    result += result8[i] + " ";
+//                }
+//                Log.e("result", result);
             }
         }, 1000);
 
@@ -219,6 +223,8 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
         result7 = new String[]{"", "", "", "", ""};
         result8 = new String[]{"", "", "", "", ""};
         NumOfClass=0;
+        result = new String[][]{{"","","","",""}, {"","","","",""}, {"","","","",""}, {"","","","",""},
+                {"","","","",""}, {"","","","",""}, {"","","","",""}, {"","","","",""}};
     }
 
     @Override
@@ -226,31 +232,38 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
         Canvas canvas = new Canvas(afterMasking);
 
         //이건 서버 연결한거! - 수정 필요
-//        int image_width = afterMasking.getWidth();
-//        int image_height = afterMasking.getHeight();
-//        for(int i=0;i<NumOfClass;i++){
-//            if(text.equals(result[i][0])){
-//                canvas.drawRect( Integer.parseInt(result[i][1])*image_width,
-//                        Integer.parseInt(result[i][2])*image_height,
-//                        Integer.parseInt(result[i][3])*image_width,
-//                        Integer.parseInt(result[i][4])*image_height, new Paint());
-//            }
-//        }
+        int image_width = afterMasking.getWidth();
+        int image_height = afterMasking.getHeight();
+        for(int i=0;i<NumOfClass_Masking;i++){
+            if(text.equals(result[i][0])){
+                int[] location = {Integer.parseInt(String.valueOf(Math.round(Double.parseDouble(result[i][1])*image_width))),
+                        Integer.parseInt(String.valueOf(Math.round(Double.parseDouble(result[i][2])*image_height))),
+                        Integer.parseInt(String.valueOf(Math.round(Double.parseDouble(result[i][3])*image_width))),
+                        Integer.parseInt(String.valueOf(Math.round(Double.parseDouble(result[i][4])*image_height)))
+                };
+
+                for(int j =0;j<4;j++){
+                    Log.e("location",String.valueOf(location[j]));
+                }
+
+                canvas.drawRect(location[0], location[1], location[2], location[3], new Paint());
+            }
+        }
 
         // 은지야! 이게 서버 연결 안한거!
-        switch (text){
-            case "id":
-                canvas.drawRect(100, 100, 200, 200, new Paint());
-                break;
-            case "name":
-                canvas.drawRect(130, 130, 200, 200, new Paint());
-                break;
-            case "address":
-                canvas.drawRect(160, 160, 200, 200, new Paint());
-                break;
-            default:
-                break;
-        }
+//        switch (text){
+//            case "id":
+//                canvas.drawRect(100, 100, 200, 200, new Paint());
+//                break;
+//            case "name":
+//                canvas.drawRect(130, 130, 200, 200, new Paint());
+//                break;
+//            case "address":
+//                canvas.drawRect(160, 160, 200, 200, new Paint());
+//                break;
+//            default:
+//                break;
+//        }
 
 
         beforeMasking.setImageBitmap(afterMasking);
@@ -282,6 +295,36 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
                 inContext.getContentResolver(), inImage, "IMG_" + System.currentTimeMillis(), null
         );
         return Uri.parse(path);
+    }
+
+    private Bitmap resize(Context context, Uri uri, int resize) {
+        Bitmap resizeBitmap = null;
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        try {
+            BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options); // 1번
+
+            int width = options.outWidth;
+            int height = options.outHeight;
+            int samplesize = 1;
+
+            while (true) {//2번
+                if (width / 2 < resize || height / 2 < resize)
+                    break;
+                width /= 2;
+                height /= 2;
+                samplesize *= 2;
+            }
+
+            options.inSampleSize = samplesize;
+            Bitmap bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options); //3번
+            resizeBitmap = bitmap;
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return resizeBitmap;
+
     }
 
 }

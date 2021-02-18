@@ -281,19 +281,20 @@ public class DetailActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(DetailActivity.this, MaskingAutoActivity.class);
                         intent.putExtra("image_string", photo_intent);
+                        intent.putExtra("image_title", detailName.getText().toString());
                         //intent.putExtra("image", Byte_image);
                         startActivity(intent);
                     }
                 });
-        builder.setNegativeButton("수동 선택",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(DetailActivity.this, MaskingActivity.class);
-                        intent.putExtra("image_string", photo_intent);
-                        //intent.putExtra("image", Byte_image);
-                        startActivity(intent);
-                    }
-                });
+//        builder.setNegativeButton("수동 선택",
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Intent intent = new Intent(DetailActivity.this, MaskingActivity.class);
+//                        intent.putExtra("image_string", photo_intent);
+//                        //intent.putExtra("image", Byte_image);
+//                        startActivity(intent);
+//                    }
+//                });
         builder.show();
     }
 

@@ -33,14 +33,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     private DatabaseReference mDatabase;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      //  setContentView(R.layout.activity_main);
-/*
+        /*setContentView(R.layout.activity_main);
+
         btn_send = findViewById(R.id.btn_send);
         btn_upload = findViewById(R.id.btn_upload);
         id_image1 = findViewById(R.id.id_image1);

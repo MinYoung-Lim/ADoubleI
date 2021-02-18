@@ -20,4 +20,10 @@
         android:title="비밀번호 변경"
         app:showAsAction="never"
         ></item>
+
+    <item
+        android:id="@+id/exit"
+        android:title="회원 탈퇴"
+        app:showAsAction="never"
+        ></item>
 </menu>

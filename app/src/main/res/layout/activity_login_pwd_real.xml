@@ -13,14 +13,7 @@
         android:layout_height="0dp"
         android:layout_weight="0.8">
 
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="35dp"
-            android:layout_height="19dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="15dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/backspace" />
+
     </LinearLayout>
 
     <View
@@ -267,6 +260,15 @@
 
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/loginByFinger"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="지문으로 로그인하기"
+            android:fontFamily="@font/scdream3"
+            android:layout_gravity="center"/>
+
 
     </LinearLayout>
 

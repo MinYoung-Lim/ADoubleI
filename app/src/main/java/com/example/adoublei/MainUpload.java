@@ -19,21 +19,26 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.text.TextUtils;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -45,6 +50,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -83,6 +89,10 @@ public class MainUpload extends AppCompatActivity {
     private Bitmap ImgBitmap;
     private NavigationView navigation;
 
+    public Switch sw;
+
+    public Boolean switchChecked = false;
+
     private static final String charsetName = "UTF-8";
     private  String useruuid = "name";
 
@@ -95,6 +105,8 @@ public class MainUpload extends AppCompatActivity {
     public String[] delete_path = null;
     ArrayList<Object> delete_path2 = new ArrayList<Object>();
     int num = 0;
+
+
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +123,40 @@ public class MainUpload extends AppCompatActivity {
         drawerLayout = findViewById(R.id.firstlayout); //마이페이지 레이아웃
         navigation = findViewById(R.id.navigation);
 
+
+        TextView userName = (TextView) findViewById(R.id.userName);
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        /*DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/" + uid + "/user/userName");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                    if(snapshot.getKey().equals("userName")){
+                        String name = String.valueOf(dataSnapshot.getValue());
+                        userName.setText("이름 : " + name);
+
+                    }
+
+
+                    // UserData userData = snapshot.getValue(UserData.class);
+                    //String name = userData.getUserName();
+
+
+                }
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });*/
+
         navigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -122,6 +168,11 @@ public class MainUpload extends AppCompatActivity {
                     case R.id.exit:
                         userDelete();
                         break;
+                    case R.id.fingerprintTF:
+                        //settingSwitch();
+
+                        break;
+
 
                 }
 
@@ -131,6 +182,17 @@ public class MainUpload extends AppCompatActivity {
             }
         });
 
+        /*Switch sw = findViewById(R.id.switch_finger);
+        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (isChecked)
+                    Toast.makeText(MainUpload.this, "스위치체크", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(getApplicationContext(), "스위치체크X", Toast.LENGTH_LONG).show();
+            }
+        });
+*/
         mRecyclerView = findViewById(R.id.recyclerview_main_list);
         int numberOfColumns = 3;
         GridLayoutManager mGridLayoutManager = new GridLayoutManager(getApplication(), numberOfColumns);
@@ -177,19 +239,56 @@ public class MainUpload extends AppCompatActivity {
 
 
         btn_upload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //이미지를 선택
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
+                                          @Override
+                                          public void onClick(View view) {
+                                              //이미지를 선택
+                                              Intent intent = new Intent();
+                                              intent.setType("image/*");
+                                              intent.setAction(Intent.ACTION_GET_CONTENT);
+                                              startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
 
-            }
-        }
+                                          }
+                                      }
         );
 
 
+
+    }
+
+   /* @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.navi_menu, menu);
+        MenuItem item = (MenuItem) menu.findItem(R.id.fingerprintTF);
+        item.setActionView(R.layout.switch_item);
+        Switch switchAB = item
+                .getActionView().findViewById(R.id.switch_finger);
+        switchAB.setChecked(false);
+
+        switchAB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                if (isChecked) {
+                    Toast.makeText(getApplicationContext(), "ON", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "OFF", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        return true;
+    }*/
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+       MenuInflater inflater = getMenuInflater();
+       inflater.inflate(R.menu.navi_menu, menu);
+
+       MenuItem item = menu.findItem(R.id.fingerprintTF);
+       sw = (Switch) MenuItemCompat.getActionView(item);
+
+       return super.onCreateOptionsMenu(menu);
+   }
+
+    private void settingSwitch() {
 
     }
 
@@ -209,25 +308,25 @@ public class MainUpload extends AppCompatActivity {
                     @Override public void onClick(DialogInterface dialogInterface, int i) {
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                            user.delete()
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                     public void onComplete(@NonNull Task<Void> task) {
-                                         if (task.isSuccessful()) {
-                                             Toast.makeText(getApplicationContext(), "회원 탈퇴에 성공하였습니다", Toast.LENGTH_LONG).show();
-                                             Log.e("회원탈퇴", "성공");
-                                             finishAffinity();
-                                             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                                             startActivity(intent);
-                                             System.exit(0);
+                        user.delete()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(getApplicationContext(), "회원 탈퇴에 성공하였습니다", Toast.LENGTH_LONG).show();
+                                            Log.e("회원탈퇴", "성공");
+                                            finishAffinity();
+                                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                            startActivity(intent);
+                                            System.exit(0);
 
-                                         }
-                                         else{
-                                             Log.e("회원탈퇴", "실패");
-                                             Toast.makeText(getApplicationContext(), "회원 탈퇴에 실패하였습니다", Toast.LENGTH_LONG).show();
-                                         }
-                    }
-                });
+                                        }
+                                        else{
+                                            Log.e("회원탈퇴", "실패");
+                                            Toast.makeText(getApplicationContext(), "회원 탈퇴에 실패하였습니다", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
 
                     } })
                 .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
@@ -324,12 +423,12 @@ public class MainUpload extends AppCompatActivity {
 
                 String EncrypString = Base64.encodeToString(EncryptImg,0);
 
-               // Log.e("Encrypt", EncrypString);
+                // Log.e("Encrypt", EncrypString);
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users")
-                            .child(currentUser.getUid()).child("Object");
+                        .child(currentUser.getUid()).child("Object");
                 String key = databaseReference.push().getKey();
-                    HashMap<Object,String> object = new HashMap<Object, String>();
+                HashMap<Object,String> object = new HashMap<Object, String>();
 
                 object.put("key", key);
                 object.put("title","IMG_" + System.currentTimeMillis()/10000000);
@@ -485,7 +584,7 @@ public class MainUpload extends AppCompatActivity {
         Cursor cursor = managedQuery(uri, projection, null, null, null);
         startManagingCursor(cursor);
         int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst(); 
+        cursor.moveToFirst();
         return cursor.getString(columnIndex);
     }
 
@@ -523,9 +622,9 @@ public class MainUpload extends AppCompatActivity {
 
     //Bitmap을 byte배열로 변환
     public static byte[] BitmapToByteArray(Bitmap bitmap) {
-       ByteArrayOutputStream baos = new ByteArrayOutputStream();
-       bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
-       return baos.toByteArray();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+        return baos.toByteArray();
 
     }
 
@@ -580,7 +679,7 @@ public class MainUpload extends AppCompatActivity {
 
     }
 
-    public boolean onPrepareOptionMenu(Menu menu){
+    /*public boolean onPrepareOptionMenu(Menu menu){
         MenuItem checkable = menu.findItem(R.id.fingerprintTF);
         checkable.setChecked(isChecked);
         return true;
@@ -591,11 +690,12 @@ public class MainUpload extends AppCompatActivity {
             case R.id.fingerprintTF:
                 isChecked = !item.isChecked();
                 item.setChecked(isChecked);
+                Toast.makeText(getApplicationContext(), "스위치클릭", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return false;
         }
-    }
+    }*/
 
 
     private void clearAll(){
@@ -648,7 +748,5 @@ public class MainUpload extends AppCompatActivity {
 
     }
 }
-
-
 
 

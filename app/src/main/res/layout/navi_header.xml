@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#DFDCDC"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:background="#DFDCDC"
+        android:fontFamily="@font/scdream3"
+        android:text="MY PAGE"
+        android:textAlignment="center"
+        android:textColor="@color/fontColor"
+        android:textSize="33sp"></TextView>
+
+
+</LinearLayout>

@@ -12,8 +12,8 @@
         android:title="지문 인식 사용"
         app:actionLayout="@layout/switch_item"
         app:showAsAction="always"
-        android:checkable="true"
-        app:actionViewClass="android.widget.Switch" />
+        app:actionViewClass="android.widget.Switch"
+        />
 
     <item
         android:id="@+id/pwChange"

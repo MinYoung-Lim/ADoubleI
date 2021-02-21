@@ -275,8 +275,9 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
     private void writeUser(String email, String name, String password,String uid){
 
         UserData userdata = new UserData(email,name,password,uid);
-        DatabaseReference mDatabase= FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("users").child(uid).push().setValue(userdata);
+        DatabaseReference mDatabase= FirebaseDatabase.getInstance().getReference().child("users").child(uid);
+        mDatabase.child("user").setValue(userdata);
+
     }
 
 

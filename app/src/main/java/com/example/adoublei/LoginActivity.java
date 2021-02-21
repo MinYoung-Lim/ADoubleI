@@ -62,6 +62,8 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
         if (user1 != null) {
             Intent intent = new Intent(getApplicationContext(), LoginPwdActivity.class);
+            //Intent intent = new Intent(getApplicationContext(), LoginFingerprintActivity.class);
+
             startActivity(intent);
             this.finish();
         } else {
@@ -95,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent2);*/
                     Intent intent = new Intent(getApplicationContext(), LoginPwdActivity.class);
                     startActivity(intent);
-                       break;
+                    break;
                 case R.id.btn_to_signup:
                     //Log.e("클릭","클릭");
                     Intent intent1 = new Intent(getApplicationContext(),InputEmailRealActivity.class);

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,14 +32,15 @@ public class LoginPwdActivity extends AppCompatActivity {
 
     TextView tv_1, tv_2, tv_3, tv_4, tv_5, tv_6, tv_7, tv_8, tv_9, tv_0;
     ImageView iv_circle_1, iv_circle_2, iv_circle_3, iv_circle_4, iv_circle_5, iv_circle_6;
-    ImageView iv_backspace, iv_back;
+    ImageView iv_backspace;
+    TextView loginByFinger;
     private StringBuffer pwd = new StringBuffer("");
     private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_input_pwd_real);
+        setContentView(R.layout.activity_login_pwd_real);
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
@@ -61,7 +64,8 @@ public class LoginPwdActivity extends AppCompatActivity {
         iv_circle_6 = findViewById(R.id.iv_circle_6);
 
         iv_backspace = findViewById(R.id.iv_backspace);
-        iv_back = findViewById(R.id.iv_back);
+
+        loginByFinger = findViewById(R.id.loginByFinger);
 
         SetOnClickListener onClickListener = new SetOnClickListener();
         tv_1.setOnClickListener(onClickListener);
@@ -78,6 +82,19 @@ public class LoginPwdActivity extends AppCompatActivity {
         iv_backspace.setOnClickListener(onClickListener);
 
 
+        String string = "지문으로 로그인하기";
+        SpannableString content = new SpannableString(string);
+        content.setSpan(new UnderlineSpan(), 0, string.length(), 0);
+        loginByFinger.setText(content);
+
+        loginByFinger.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), LoginFingerprintActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
 
 
@@ -93,13 +110,6 @@ public class LoginPwdActivity extends AppCompatActivity {
 
     }
 
-
-
-    @Override
-    public void onBackPressed()  // 뒤로가기 방지
-    {
-        //super.onBackPressed();
-    }
 
     class SetOnClickListener implements TextView.OnClickListener{
 

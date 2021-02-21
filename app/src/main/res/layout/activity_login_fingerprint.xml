@@ -29,6 +29,30 @@
             android:layout_gravity="center"
             android:gravity="center"/>
 
+
     </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonAuthWithFingerprint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="20dp"
+        android:textSize="30dp"
+        android:background="#00ff0000"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5.5"/>
+    <TextView
+        android:id="@+id/loginByPwd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="비밀번호로 로그인하기"
+        android:fontFamily="@font/scdream3"
+        android:layout_gravity="center"
+        android:gravity="bottom"
+        />
 
 </LinearLayout>

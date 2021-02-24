@@ -198,7 +198,7 @@ public class MainUpload extends AppCompatActivity {
         mItem = new ArrayList<>();
         loadPhoto();
 
-        myAdapter = new MyAdapter(mItem);
+        myAdapter = new MyAdapter(mItem,getApplicationContext());
         mRecyclerView.setAdapter(myAdapter);
 
         DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(mRecyclerView.getContext(),mGridLayoutManager.getOrientation());

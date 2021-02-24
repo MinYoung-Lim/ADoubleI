@@ -212,6 +212,11 @@ public class ReInputPwdRealActivity extends AppCompatActivity {
                                 editor.putString("email", email);
                                 editor.commit();
 
+                                SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
+                                SharedPreferences.Editor editor2 = prefs.edit();
+                                editor2.putString("name", name);
+                                editor2.commit();
+
                                 // 사용자 정보 업로드 후 메인 화면으로 이동
                                 Intent intent2 = new Intent(getApplicationContext(), MainUpload.class);
                                 startActivity(intent2);

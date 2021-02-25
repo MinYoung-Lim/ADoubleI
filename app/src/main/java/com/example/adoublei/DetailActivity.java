@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.pdf.PdfDocument;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -28,6 +31,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.adoublei.masking.MaskingActivity;
 import com.example.adoublei.masking.MaskingAutoActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +47,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -98,8 +103,48 @@ public class DetailActivity extends AppCompatActivity {
         //ImgBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
         ImgBitmap = resize(getApplicationContext(), Uri.parse(photo), 1000);
 
+
+
+       /* Uri filePath = Uri.parse(photo);
+        Uri mPhotoUri = Uri.parse(getRealPathFromURI(filePath));
+
+        ExifInterface exif = null;
+        try {
+
+            int batchNum = 0;
+            InputStream buf = getContentResolver().openInputStream(filePath);
+            Bitmap albumphoto = BitmapFactory.decodeStream(buf);
+            buf.close();
+
+            // 사진의 회전 정보 얻어오는 부분
+            exif = new ExifInterface(mPhotoUri.getPath());
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+            // 선택한 사진 rotate
+            Bitmap albumRotated = rotateBitmap(albumphoto, orientation);
+            // imageview 사진 뜨게함
+            detailPhoto.setImageBitmap(albumRotated);
+
+            // ~~~~~~ 이 뒤에 다른 코드들 있음~
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
+
         Byte_image = BitmapToByteArray(ImgBitmap);
 
+        //Uri path = Uri.parse(photo);
+        //Uri mPhotoUri = Uri.parse(getRealPathFromURI(path));
+        //Glide.with(this).load(path).into(detailPhoto);
+
+        // 이미지 회전
+        if (ImgBitmap.getHeight() <= ImgBitmap.getWidth()){
+            ImgBitmap = imgRotate(ImgBitmap);
+        }
+        
+        
+        
         detailPhoto.setImageBitmap(ImgBitmap);
         detailName.setText(originalTitle);
 
@@ -207,6 +252,79 @@ public class DetailActivity extends AppCompatActivity {
         });
 
     } // end onCreate()
+
+    private Bitmap imgRotate(Bitmap bmp){
+        int width = bmp.getWidth();
+        int height = bmp.getHeight();
+
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+
+        Bitmap resizedBitmap = Bitmap.createBitmap(bmp, 0, 0, width, height, matrix, true);
+        bmp.recycle();
+
+        return resizedBitmap;
+    }
+
+
+
+    public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
+
+        Matrix matrix = new Matrix();
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_NORMAL:
+                return bitmap;
+            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                matrix.setScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.setRotate(180);
+                break;
+            case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                matrix.setRotate(180);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_TRANSPOSE:
+                matrix.setRotate(90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.setRotate(90);
+                break;
+            case ExifInterface.ORIENTATION_TRANSVERSE:
+                matrix.setRotate(-90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                matrix.setRotate(-90);
+                break;
+            default:
+                return bitmap;
+        }
+        try {
+            Bitmap bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            bitmap.recycle();
+            return bmRotated;
+        }
+        catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private String getRealPathFromURI(Uri contentURI) {
+        String result;
+        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) {
+            // Source is Dropbox or other similar local file path
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx); cursor.close();
+        }
+        return result;
+    }
 
     @Override
     public void onBackPressed()  // 뒤로가기 방지

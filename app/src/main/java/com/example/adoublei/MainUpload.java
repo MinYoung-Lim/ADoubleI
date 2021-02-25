@@ -5,11 +5,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.hardware.camera2.TotalCaptureResult;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -124,29 +127,23 @@ public class MainUpload extends AppCompatActivity {
         navigation = findViewById(R.id.navigation);
 
 
-        TextView userName = (TextView) findViewById(R.id.userName);
+        //final TextView userName = (TextView) findViewById(R.id.userName);
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = currentUser.getUid();
+
+        /*SharedPreferences prefs =getSharedPreferences("user", MODE_PRIVATE);
+        String result = prefs.getString("name", "0"); //키값, 디폴트값
+        Log.e("name", result);
+        userName.setText(result);*/
 
         /*DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users/" + uid + "/user/userName");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                    if(snapshot.getKey().equals("userName")){
-                        String name = String.valueOf(dataSnapshot.getValue());
-                        userName.setText("이름 : " + name);
-
-                    }
-
-
-                    // UserData userData = snapshot.getValue(UserData.class);
-                    //String name = userData.getUserName();
-
-
-                }
-
+                String name = dataSnapshot.getValue(String.class);
+                userName.setText(name);
 
 
             }
@@ -156,7 +153,6 @@ public class MainUpload extends AppCompatActivity {
 
             }
         });*/
-
         navigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -202,7 +198,7 @@ public class MainUpload extends AppCompatActivity {
         mItem = new ArrayList<>();
         loadPhoto();
 
-        myAdapter = new MyAdapter(mItem);
+        myAdapter = new MyAdapter(mItem,getApplicationContext());
         mRecyclerView.setAdapter(myAdapter);
 
         DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(mRecyclerView.getContext(),mGridLayoutManager.getOrientation());
@@ -252,6 +248,12 @@ public class MainUpload extends AppCompatActivity {
         );
 
 
+        /*View navHeader = navigation.getHeaderView(0);
+        TextView navName = navHeader.findViewById(R.id.userName);
+        SharedPreferences prefs =getSharedPreferences("user", MODE_PRIVATE);
+        String result = prefs.getString("name", "0"); //키값, 디폴트값
+        Log.e("name", result);
+        navName.setText(result);*/
 
     }
 
@@ -277,13 +279,18 @@ public class MainUpload extends AppCompatActivity {
         });
         return true;
     }*/
+
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
        MenuInflater inflater = getMenuInflater();
        inflater.inflate(R.menu.navi_menu, menu);
 
-       MenuItem item = menu.findItem(R.id.fingerprintTF);
-       sw = (Switch) MenuItemCompat.getActionView(item);
+       MenuItem item = menu.findItem(R.id.userName);
+       SharedPreferences prefs =getSharedPreferences("user", MODE_PRIVATE);
+       String result = prefs.getString("name", "0"); //키값, 디폴트값
+       Log.e("name", result);
+       item.setTitle(result);
+
 
        return super.onCreateOptionsMenu(menu);
    }
@@ -411,6 +418,7 @@ public class MainUpload extends AppCompatActivity {
 
             ImgBitmap = resize(getApplicationContext(), filePath, 1000);
 
+
             Byte_image = BitmapToByteArray(ImgBitmap);
 
 
@@ -447,6 +455,50 @@ public class MainUpload extends AppCompatActivity {
 
 
     }
+
+    public Bitmap rotate(Bitmap bitmap, int degrees)
+    {
+        if(degrees != 0 && bitmap != null)
+        {
+            Matrix m = new Matrix();
+            m.setRotate(degrees, (float) bitmap.getWidth() / 2,
+                    (float) bitmap.getHeight() / 2);
+
+            try
+            {
+                Bitmap converted = Bitmap.createBitmap(bitmap, 0, 0,
+                        bitmap.getWidth(), bitmap.getHeight(), m, true);
+                if(bitmap != converted)
+                {
+                    bitmap.recycle();
+                    bitmap = converted;
+                }
+            }
+            catch(OutOfMemoryError ex)
+            {
+                // 메모리가 부족하여 회전을 시키지 못할 경우 그냥 원본을 반환합니다.
+            }
+        }
+        return bitmap;
+    }
+
+    public int exifOrientationToDegrees(int exifOrientation)
+    {
+        if(exifOrientation == ExifInterface.ORIENTATION_ROTATE_90)
+        {
+            return 90;
+        }
+        else if(exifOrientation == ExifInterface.ORIENTATION_ROTATE_180)
+        {
+            return 180;
+        }
+        else if(exifOrientation == ExifInterface.ORIENTATION_ROTATE_270)
+        {
+            return 270;
+        }
+        return 0;
+    }
+
     public void fileDelete(){
         for(int i=0;i<delete_path2.size();i++){
             //fileDelete((String) delete_path2.get(i));

@@ -3,19 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/userName"
-        android:title="이름"
-        app:showAsAction="never"></item>
-
-    <item
-        android:id="@+id/fingerprintTF"
-        android:title="지문 인식 사용"
-        app:actionLayout="@layout/switch_item"
-        app:showAsAction="always"
-        app:actionViewClass="android.widget.Switch"
-        />
-
-    <item
         android:id="@+id/pwChange"
         android:title="비밀번호 변경"
         app:showAsAction="never"

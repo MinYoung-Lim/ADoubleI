@@ -1,6 +1,8 @@
 package com.example.adoublei.masking;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.adoublei.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MaskingAdapter extends RecyclerView.Adapter<MaskingAdapter.RecyclerViewHolders> {
 
     private Context context;
     private ArrayList<MaskingItem> mItem;
     private OnItemClickListener listener;
+    private int bool = -1;
 
     public MaskingAdapter(ArrayList<MaskingItem> item){
         //this.context = context;
@@ -40,7 +44,6 @@ public class MaskingAdapter extends RecyclerView.Adapter<MaskingAdapter.Recycler
 
             this.title = (Button) itemView.findViewById(R.id.button_option);
 
-            itemView.setOnClickListener(this);
         }
 
         @Override
@@ -51,7 +54,14 @@ public class MaskingAdapter extends RecyclerView.Adapter<MaskingAdapter.Recycler
                 if(position!=RecyclerView.NO_POSITION)
                 {
                     listener.onItemClick(v, position);
+                    if (mItem.get(position).getChecked() == true){
+                        v.setSelected(true);
+                    }else{
+                        v.setSelected(false);
+                    }
+
                 }
+
 
             }
 
@@ -73,6 +83,10 @@ public class MaskingAdapter extends RecyclerView.Adapter<MaskingAdapter.Recycler
         //holder.title.setTextSize(TypedValue.COMPLEX_UNIT_SP,10);
         //holder.title.setGravity(Gravity.LEFT);
         holder.title.setText(mItem.get(position).getTitle());
+        if (mItem.get(position).getChecked() == true){
+            holder.title.setSelected(true);
+        }
+
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

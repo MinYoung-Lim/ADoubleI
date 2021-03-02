@@ -47,17 +47,17 @@ public class LoginActivity extends AppCompatActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-/*        user.delete()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.e("회원탈퇴", "성공");
-                        }
-                        else
-                            Log.e("회원탈퇴", "실패");
-                    }
-                });*/
+//        user.delete()
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        if (task.isSuccessful()) {
+//                            Log.e("회원탈퇴", "성공");
+//                        }
+//                        else
+//                            Log.e("회원탈퇴", "실패");
+//                    }
+//                });
 
         FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
         if (user1 != null) {

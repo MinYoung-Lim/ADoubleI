@@ -15,7 +15,6 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:background="@drawable/masking_button_layout"
-        android:backgroundTint="#FFFFFF"
         android:fontFamily="@font/scdream3"
         android:text="이름"
         android:textColor="@color/fontColor"

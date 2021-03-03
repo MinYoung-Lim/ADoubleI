@@ -9,7 +9,11 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
@@ -47,6 +51,7 @@ import static com.example.adoublei.FileUploadUtils.result6;
 import static com.example.adoublei.FileUploadUtils.result7;
 import static com.example.adoublei.FileUploadUtils.result8;
 import static com.example.adoublei.FileUploadUtils.NumOfClass;
+import static com.example.adoublei.masking.BottomSheetDialog.flag;
 
 public class MaskingAutoActivity extends AppCompatActivity implements BottomSheetDialog.BottomSheetListener {
 
@@ -81,7 +86,6 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
         String image_intent = getIntent().getStringExtra("image_string");
         String image_title = getIntent().getStringExtra("image_title");
 
-        Bitmap image = null;
         image = resize(getApplicationContext(), Uri.parse(image_intent), 1000);
 
         //image = BitmapFactory.decodeByteArray(arr, 0, arr.length);
@@ -89,10 +93,14 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
         btn_back = findViewById(R.id.btn_back);
         btn_download = findViewById(R.id.btn_img_download);
         image_name = findViewById(R.id.thename);
-
         image_name.setText(image_title);
+
+        // 이미지 회전
+        if (image.getHeight() <= image.getWidth()){
+            image = imgRotate(image);
+        }
+
         beforeMasking.setImageBitmap(image);
-        afterMasking = Bitmap.createBitmap(image).copy(Bitmap.Config.ARGB_8888, true);
 
         image_width = image.getWidth();
         image_height = image.getHeight();
@@ -268,8 +276,19 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
 //                Log.e("result", result);
             }
         }, 1000);
+    }
 
+    private Bitmap imgRotate(Bitmap bmp){
+        int width = bmp.getWidth();
+        int height = bmp.getHeight();
 
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+
+        Bitmap resizedBitmap = Bitmap.createBitmap(bmp, 0, 0, width, height, matrix, true);
+        bmp.recycle();
+
+        return resizedBitmap;
     }
 
     private void ResetStaticResult() {
@@ -285,32 +304,36 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
         NumOfClass=0;
         result = new String[][]{{"","","","",""}, {"","","","",""}, {"","","","",""}, {"","","","",""},
                 {"","","","",""}, {"","","","",""}, {"","","","",""}, {"","","","",""}};
+        flag = new String[]{"","","","","","","",""};
+
     }
 
     @Override
-    public void onButtonClicked(View view, String text) {
+    public void onButtonClicked(View view, String text, Boolean bool) {
+
+        afterMasking = Bitmap.createBitmap(image).copy(Bitmap.Config.ARGB_8888, true);
         Canvas canvas = new Canvas(afterMasking);
 
-        //이건 서버 연결한거! - 수정 필요
         int image_width = afterMasking.getWidth();
         int image_height = afterMasking.getHeight();
-        for(int i=0;i<NumOfClass_Masking;i++){
-            if(text.equals(result[i][0])){
-                int[] location = {Integer.parseInt(String.valueOf(Math.round(Double.parseDouble(result[i][1])*image_width))),
-                        Integer.parseInt(String.valueOf(Math.round(Double.parseDouble(result[i][2])*image_height))),
-                        Integer.parseInt(String.valueOf(Math.round(Double.parseDouble(result[i][3])*image_width))),
-                        Integer.parseInt(String.valueOf(Math.round(Double.parseDouble(result[i][4])*image_height)))
-                };
 
-                for(int j =0;j<4;j++){
-                    Log.e("location",String.valueOf(location[j]));
+        for(int k = 0; k< NumOfClass_Masking; k++){
+            if(flag[k].equals("O")){
+                int[] location = {Integer.parseInt(String.valueOf(Math.round(Double.parseDouble(result[k][1]) * image_width))),
+                        Integer.parseInt(String.valueOf(Math.round(Double.parseDouble(result[k][2]) * image_height))),
+                        Integer.parseInt(String.valueOf(Math.round(Double.parseDouble(result[k][3]) * image_width))),
+                        Integer.parseInt(String.valueOf(Math.round(Double.parseDouble(result[k][4]) * image_height)))};
+
+                for (int j = 0; j < 4; j++) {
+                    Log.e("location", String.valueOf(location[j]));
                 }
 
                 canvas.drawRect(location[0], location[1], location[2], location[3], new Paint());
+
             }
         }
 
-        // 은지야! 이게 서버 연결 안한거!
+            // 은지야! 이게 서버 연결 안한거!
 //        switch (text){
 //            case "id":
 //                canvas.drawRect(100, 100, 200, 200, new Paint());
@@ -325,8 +348,8 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
 //                break;
 //        }
 
-
         beforeMasking.setImageBitmap(afterMasking);
+
     }
 
     // 사진 갤러리 저장
@@ -392,7 +415,6 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
 
      /*   String targetPdf = "/sdcard/image.pdf";
         File filePath = new File(targetPdf);
-
       */
         try {
             document.writeTo(new FileOutputStream(file));

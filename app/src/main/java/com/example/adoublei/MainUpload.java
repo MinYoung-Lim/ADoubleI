@@ -235,16 +235,16 @@ public class MainUpload extends AppCompatActivity {
 
 
         btn_upload.setOnClickListener(new View.OnClickListener() {
-                                          @Override
-                                          public void onClick(View view) {
-                                              //이미지를 선택
-                                              Intent intent = new Intent();
-                                              intent.setType("image/*");
-                                              intent.setAction(Intent.ACTION_GET_CONTENT);
-                                              startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
+              @Override
+              public void onClick(View view) {
+                  //이미지를 선택
+                  Intent intent = new Intent();
+                  intent.setType("image/*");
+                  intent.setAction(Intent.ACTION_GET_CONTENT);
+                  startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
 
-                                          }
-                                      }
+              }
+            }
         );
 
 
@@ -643,8 +643,10 @@ public class MainUpload extends AppCompatActivity {
     private Uri getImageUri(Context context, Bitmap inImage) { //bitmap -> Uri
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100,bytes);
-        path = MediaStore.Images.Media.insertImage(context.getContentResolver(), inImage, "Title", null);
-
+        //path = MediaStore.Images.Media.insertImage(context.getContentResolver(), inImage, "Title", null);
+        path = MediaStore.Images.Media.insertImage(
+                context.getContentResolver(), inImage, "IMG_" + System.currentTimeMillis(), null
+        );
         delete_path2.add(getPath(Uri.parse(path)));
 
         return Uri.parse(path);

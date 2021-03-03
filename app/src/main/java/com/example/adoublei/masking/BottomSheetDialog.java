@@ -45,6 +45,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
 //    static String[][] result = new String[8][5];
 
     static String[] label_name = new String[NumOfClass_Masking];
+    static String[] flag = {"","","","","","","",""};
 
     private ArrayList<MaskingItem> mItem = new ArrayList<>();
     MaskingAdapter maskingAdapter =null;
@@ -78,6 +79,9 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         for(int i = 0; i < NumOfClass_Masking; i++){
             MaskingItem op = new MaskingItem();
             String name = result[i][0];
+            if (flag[i].equals("O")){
+                op.setChecked(true);
+            }
             op.setTitle(name);
             mItem.add(op);
         }
@@ -92,10 +96,18 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         maskingOption.addOnItemTouchListener(new RecyclerTouchListener(getContext(), maskingOption, new BottomSheetDialog.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-
                 MaskingItem op = mItem.get(position);
-                listener.onButtonClicked(view, op.getTitle());
 
+                op.setChecked(!op.getChecked());
+                if (op.getChecked() == true){
+                    flag[position] = "O";
+                    view.setSelected(true);
+                }else{
+                    flag[position] = "X";
+                    view.setSelected(false);
+                }
+
+                listener.onButtonClicked(view, op.getTitle(), op.getChecked());
                 Log.e("title",op.getTitle());
 
             }
@@ -155,7 +167,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     public interface BottomSheetListener {
-        void onButtonClicked(View view, String text);
+        void onButtonClicked(View view, String text, Boolean flag);
 
     }
 

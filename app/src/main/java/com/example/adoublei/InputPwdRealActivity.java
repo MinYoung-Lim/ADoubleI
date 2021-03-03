@@ -65,12 +65,12 @@ public class InputPwdRealActivity extends AppCompatActivity {
 
         iv_backspace.setOnClickListener(onClickListener);
 
-        iv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+//        iv_back.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                finish();
+//            }
+//        });
 
 
 

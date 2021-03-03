@@ -164,10 +164,10 @@ public class MainUpload extends AppCompatActivity {
                     case R.id.exit:
                         userDelete();
                         break;
-                    case R.id.fingerprintTF:
+                 //   case R.id.fingerprintTF:
                         //settingSwitch();
 
-                        break;
+                        //break;
 
 
                 }
@@ -285,11 +285,11 @@ public class MainUpload extends AppCompatActivity {
        MenuInflater inflater = getMenuInflater();
        inflater.inflate(R.menu.navi_menu, menu);
 
-       MenuItem item = menu.findItem(R.id.userName);
+      // MenuItem item = menu.findItem(R.id.userName);
        SharedPreferences prefs =getSharedPreferences("user", MODE_PRIVATE);
        String result = prefs.getString("name", "0"); //키값, 디폴트값
        Log.e("name", result);
-       item.setTitle(result);
+   //    item.setTitle(result);
 
 
        return super.onCreateOptionsMenu(menu);

@@ -170,16 +170,16 @@ public class DetailActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         if(listArray[which]=="PNG"){
                             saveToGallery();
-                            Toast.makeText(getApplicationContext(), "갤러리에 저장되었습니다.", Toast.LENGTH_LONG);
+                            //Toast.makeText(getApplicationContext(), "갤러리에 저장되었습니다.", Toast.LENGTH_LONG);
                         }if(listArray[which]=="PDF"){
                             //pdf
                             createPdf();
-                            Toast.makeText(getApplicationContext(), "pdf파일이 저장되었습니다.", Toast.LENGTH_LONG);
+                            //Toast.makeText(getApplicationContext(), "pdf파일이 저장되었습니다.", Toast.LENGTH_LONG);
                         }if(listArray[which]=="마스킹"){
                             //마스킹
                             masking();
                         } else{
-                            Toast.makeText(getApplicationContext(),"잘못된 요청입니다.",Toast.LENGTH_LONG);
+                            //Toast.makeText(getApplicationContext(),"잘못된 요청입니다.",Toast.LENGTH_LONG);
                         }
 
                     }
@@ -434,6 +434,8 @@ public class DetailActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream);
+
+        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,Uri.fromFile(outFile)));
         try{
             outputStream.flush();
         }catch (Exception e){
@@ -445,6 +447,7 @@ public class DetailActivity extends AppCompatActivity {
         catch (Exception e){
             e.printStackTrace();
         }
+        startToast("갤러리에 사진이 저장되었습니다.");
     }
 
     //pdf변환

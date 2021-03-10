@@ -16,6 +16,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -322,10 +323,14 @@ public class MainUpload extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(getApplicationContext(), "회원 탈퇴에 성공하였습니다", Toast.LENGTH_LONG).show();
                                             Log.e("회원탈퇴", "성공");
-                                            finishAffinity();
+                                            ActivityCompat.finishAffinity(MainUpload.this);
+                                            System.exit(0);
+
+
+                                            /*finishAffinity();
                                             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                                             startActivity(intent);
-                                            System.exit(0);
+                                            System.exit(0);*/
 
                                         }
                                         else{

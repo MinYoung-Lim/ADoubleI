@@ -82,7 +82,36 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
             if (flag[i].equals("O")){
                 op.setChecked(true);
             }
-            op.setTitle(name);
+
+            switch(name) {
+                case "address":
+                    op.setTitle("주소");
+                    break;
+                case "id_num":
+                    op.setTitle("주민등록번호");
+                    break;
+                case "name_ko":
+                    op.setTitle("한글 이름");
+                    break;
+                case "name_han":
+                    op.setTitle("한자 이름");
+                    break;
+                case "name_en":
+                    op.setTitle("영어 이름");
+                    break;
+                case "major":
+                    op.setTitle("전공");
+                    break;
+                case "student_num":
+                    op.setTitle("학번");
+                    break;
+                case "drive_num":
+                    op.setTitle("한자 이름");
+                    break;
+                //default:
+                //    break;
+            }
+
             mItem.add(op);
         }
 

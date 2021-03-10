@@ -416,6 +416,37 @@ public class DetailActivity extends AppCompatActivity {
         builder.show();
     }
 
+//    private void saveToGallery(){
+//
+//        BitmapDrawable bitmapDrawable = (BitmapDrawable) detailPhoto.getDrawable();
+//        Bitmap bitmap = bitmapDrawable.getBitmap();
+//
+//        FileOutputStream outputStream = null;
+//        File file = Environment.getExternalStorageDirectory();
+//        File dir = new File(file.getAbsolutePath() + "/MyPics");
+//        dir.mkdirs();
+//
+//        String filename = String.format("%d.png",System.currentTimeMillis());
+//        File outFile = new File(dir,filename);
+//        try{
+//            outputStream = new FileOutputStream(outFile);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream);
+//        try{
+//            outputStream.flush();
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        try{
+//            outputStream.close();
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//        }
+//    }
+
     private void saveToGallery(){
 
         BitmapDrawable bitmapDrawable = (BitmapDrawable) detailPhoto.getDrawable();
@@ -476,8 +507,12 @@ public class DetailActivity extends AppCompatActivity {
 
         // write the document content
         //pdf저장시 파일명은 저장하는 시간으로 설정
-        String filePath = Environment.getExternalStorageDirectory().getPath()+"/sdcard/"+date+".pdf";
-        File file = new File(filePath);
+        File filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        String file_string = filePath.getAbsolutePath() + "/" + detailName.getText().toString() + ".pdf";
+        File file = new File(file_string);
+
+        //File file_test = new File(filePath2_test);
+
 
      /*   String targetPdf = "/sdcard/image.pdf";
         File filePath = new File(targetPdf);
@@ -485,9 +520,9 @@ public class DetailActivity extends AppCompatActivity {
       */
         try {
             document.writeTo(new FileOutputStream(file));
-          //  btn_convert.setText("Check PDF");
+            //btn_convert.setText("Check PDF");
             boolean_save=true;
-         //   Toast.makeText(this, "다운로드 완료 ",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Download 폴더에 pdf 파일이 저장되었습니다.",Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(this, "Something wrong: " + e.toString(), Toast.LENGTH_LONG).show();

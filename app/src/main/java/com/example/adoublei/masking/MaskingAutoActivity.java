@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -352,6 +353,11 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
 
     }
 
+    private void startToast(String msg){
+        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
+    }
+
+
     // 사진 갤러리 저장
     private void saveToGallery(){
 
@@ -371,6 +377,8 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
             e.printStackTrace();
         }
         bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream);
+
+        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,Uri.fromFile(outFile)));
         try{
             outputStream.flush();
         }catch (Exception e){
@@ -382,6 +390,7 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
         catch (Exception e){
             e.printStackTrace();
         }
+        startToast("갤러리에 사진이 저장되었습니다.");
     }
 
     //pdf변환
@@ -410,17 +419,22 @@ public class MaskingAutoActivity extends AppCompatActivity implements BottomShee
 
         // write the document content
         //pdf저장시 파일명은 저장하는 시간으로 설정
-        String filePath = Environment.getExternalStorageDirectory().getPath()+"/sdcard/"+date+".pdf";
-        File file = new File(filePath);
+        File filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        String file_string = filePath.getAbsolutePath() + "/" + image_name.getText().toString() + ".pdf";
+        File file = new File(file_string);
+
+        //File file_test = new File(filePath2_test);
+
 
      /*   String targetPdf = "/sdcard/image.pdf";
         File filePath = new File(targetPdf);
+
       */
         try {
             document.writeTo(new FileOutputStream(file));
-            //  btn_convert.setText("Check PDF");
+            //btn_convert.setText("Check PDF");
             boolean_save=true;
-            //   Toast.makeText(this, "다운로드 완료 ",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Download 폴더에 pdf 파일이 저장되었습니다.",Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(this, "Something wrong: " + e.toString(), Toast.LENGTH_LONG).show();

@@ -80,6 +80,10 @@ public class MainUpload extends AppCompatActivity {
     MyAdapter myAdapter=null;
     private ArrayList<ItemObject> mItem =new ArrayList<ItemObject>();
     AESCoderAndriod aesCoderAndriod = new AESCoderAndriod();
+    private FirebaseAuth mAuth = null;
+   // private GoogleSignInClient mGoogleSignInClient;
+    private static final int RC_SIGN_IN = 9001;
+  //  private SignInButton signInButton;
 
 
     private Uri filePath;
@@ -307,6 +311,10 @@ public class MainUpload extends AppCompatActivity {
 
     }
 
+    private void revokeAccess() {
+
+    }
+
     private void userDelete() {
 
         AlertDialog.Builder msgBuilder = new AlertDialog.Builder(MainUpload.this)
@@ -314,10 +322,11 @@ public class MainUpload extends AppCompatActivity {
                 .setMessage("정말로 회원을 탈퇴하시겠습니까?")
                 .setPositiveButton("예", new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialogInterface, int i) {
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        /*/   FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                         user.delete()
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
+
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
@@ -332,18 +341,32 @@ public class MainUpload extends AppCompatActivity {
                                             startActivity(intent);
                                             System.exit(0);*/
 
-                                        }
-                                        else{
-                                            Log.e("회원탈퇴", "실패");
-                                            Toast.makeText(getApplicationContext(), "회원 탈퇴에 실패하였습니다", Toast.LENGTH_LONG).show();
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                        user.delete()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(getApplicationContext(), "회원 탈퇴에 성공하였습니다", Toast.LENGTH_LONG).show();
+                                            Log.e("회원탈퇴", "성공");
+                                            ActivityCompat.finishAffinity(MainUpload.this);
+                                            System.exit(0);
                                         }
                                     }
                                 });
 
-                    } })
-                .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface dialogInterface, int i) {
-                    }
+                                   //     else{
+                                     //       Log.e("회원탈퇴", "실패");
+                                   //        Toast.makeText(getApplicationContext(), "회원 탈퇴에 실패하였습니다", Toast.LENGTH_LONG).show();
+                                        }
+                                  //}
+                               //});
+
+                //    } })
+             //   .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+               //     @Override public void onClick(DialogInterface dialogInterface, int i) {
+                 //   }
                 });
 
         AlertDialog msgDlg = msgBuilder.create();
